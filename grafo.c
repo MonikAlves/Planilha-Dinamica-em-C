@@ -97,7 +97,7 @@ void print_celulas(Vertice ** celulas,int lin, int col){
 }
 
 void print_alfabeto(int col){
-    printf("[%*s%c%*s]", 1, "", " ", 1, "");
+    printf("[%*s%c%*s] | ", 1, "", " ", 1, "");
     for(int i = 0;i<col;i++){
         int temp = i+1;
         char columnName[10];
@@ -116,7 +116,8 @@ void print_alfabeto(int col){
         }
 
         columnName[index] = '\0';
-        printf("[%*s%s%*s]", 3, "",columnName , 4, "");
+        int padding = (10 - 1) / 2;  // Calcular o espaçamento para centralizar
+        printf("[%*s%s%*s]", padding, "", columnName, 10 - padding - 1, "");
     }
     printf("\n");
 }
