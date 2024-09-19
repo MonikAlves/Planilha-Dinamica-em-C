@@ -6,7 +6,7 @@ typedef struct vertice{
     int id;
     double number;
     char * formula;
-    struct vertice * adj;
+    struct vertice ** adj;
     int numeroAdj;
     bool change;
 }Vertice;
