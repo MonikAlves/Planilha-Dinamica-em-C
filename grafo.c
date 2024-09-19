@@ -62,9 +62,7 @@ int from_A1_to_Id(char *a1,int C) {
     while (isalpha(*p)) {
         colNumber = colNumber * 26 + (*p - 'A' + 1);
         p++;
-    }
-
-    col = colNumber - 1;  // Ajusta para zero-based index
+    }// Ajusta para zero-based index
     
     // Encontrar a parte do número da linha
     int rowNumber = atoi(p);
