@@ -1,49 +1,52 @@
 #include <stdio.h>
 #include "calculadora.h"
+#include "expressao.h"
+#include "grafo.h"
 
 int main(){
-    double teste;
-    char a[6] = "2 5 +";
-    teste =calculadora(a);
+    Vertice ** celulas;
+    int col,lin;
+    int id =0;
+    char aux[10];
+    int auxnum;
 
-    printf("%f",teste);
+    scanf("%d %d%*c",&lin,&col);
+
+    celulas = (Vertice**) malloc(lin*sizeof(Vertice*));
+    for(int i =0;i<lin;i++){
+        celulas[i] = (Vertice*) malloc(col*sizeof(Vertice));
+    }
+
+    for(int i =0;i<lin;i++){
+        for(int j=0;j<col;j++){
+            celulas[i][j].id =  coordenada_para_id(i,j,col);
+            celulas[i][j].adj = NULL;
+            celulas[i][j].numeroAdj = 0; 
+        }
+    }
+
+    print_alfabeto(col);
+    
+    for(int i =0;i<lin;i++){
+        printf("[%*s%d%*s]", 1, "", i+1, 1, "");
+        for(int j=0;j<col;j++){
+            printf("[%*s%.2f%*s]", 2, "", celulas[i][j].id, 2, "");
+        }
+        printf("\n");
+    }
+
+    printf("Digite a celula que quer mudar: ");
+    scanf("%[^\n]%*c",aux);
+    printf("e o numero dela: ");
+    scanf("%d",&auxnum );
+
+    get_from_id(celulas,lin,col,from_A1_to_Id(aux,col))->number = auxnum;
+
+    // Liberação de memória (recomendado para evitar vazamento de memória)
+    for (int i = 0; i < lin; i++) {
+        free(celulas[i]);
+    }
+    free(celulas);
+
     return 0;
 }
-
-void extrair_id(char *expressao) {
-    int size = strlen(expressao);
-    int indice = 0;
-    
-    // Inicializa uma matriz de strings
-    char **variaveis = (char **)malloc(sizeof(char *));
-    variaveis[indice] = NULL;
-
-    for (int i = 0; i < size; i++) {
-        int loop = 1;
-        int caracter = 0;
-
-        // Inicia uma nova string para armazenar o token
-        variaveis[indice] = (char *)malloc(sizeof(char));
-
-        while (loop && i < size) {
-            if (expressao[i] == ' ' || expressao[i] == '\0') {
-                loop = 0;  // Termina o loop ao encontrar um espaço ou o final da string
-            } else {
-                // Realoca espaço para o próximo caractere
-                variaveis[indice] = (char *)realloc(variaveis[indice], (caracter + 1) * sizeof(char));
-                variaveis[indice][caracter] = expressao[i];
-                caracter++;
-            }
-            i++;
-        }
-
-        // Adiciona o terminador nulo para a string
-        variaveis[indice] = (char *)realloc(variaveis[indice], (caracter + 1) * sizeof(char));
-        variaveis[indice][caracter] = '\0';  // Finaliza a string
-
-        indice++;  // Incrementa o índice para o próximo token
-
-        // Realoca a matriz para comportar mais strings
-        variaveis = (char **)realloc(variaveis, (indice + 1) * sizeof(char *));
-        variaveis[indice] = NULL;  // Inicializa a nova posição
-    }

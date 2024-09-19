@@ -1,6 +1,6 @@
 #include <stdbool.h>
-#ifndef __CALCULADORA_H__
-#define __CALCULADORA_H__
+#ifndef __GRAFO_H__
+#define __GRAFO_H__
 
 typedef struct vertice{
     int id;
@@ -11,15 +11,14 @@ typedef struct vertice{
     bool change;
 }Vertice;
 
-int coordenada_para_id(int x, int y, int colunas) ;
-int id_para_linha(int id, int colunas) ;
-int id_para_coluna(int id, int colunas) ;
-void toA1(int row, int col, char *result);
+
 Vertice * get_from_id(Vertice** planilha,int lin, int col,int id);
-int from_A1_to_Id(char *a1,int C) ;
-bool isCyclicUtil(Vertice *v, bool visitado[], bool recStack[]) ;
-bool isCyclic(Vertice **matrix, int l,int C) ;
-void adicionarAdjacentes(Vertice ** planilha,Vertice* atual,Vertice* destino,int l,int c);
+bool is_Cyclic_Util(Vertice *v, bool visitado[], bool recStack[]) ;
+bool is_Cyclic(Vertice **matrix, int l,int C) ;
+void adicionar_Adjacentes(Vertice ** planilha,Vertice* atual,Vertice* destino,int l,int c);
+void print_alfabeto(int col);
+void print_celulas(Vertice ** celulas,int L, int C);
+
 
 
 #endif

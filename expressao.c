@@ -7,6 +7,44 @@
 #include <stdlib.h>
 #include <string.h>
 
+int coordenada_para_id(int x, int y, int colunas) {
+    return x * colunas + y;
+}
+
+// Função para converter o ID de volta para coordenada (x, y)
+int id_para_linha(int id, int colunas) {
+    return id / colunas;
+}
+
+int id_para_coluna(int id, int colunas) {
+    return id % colunas;
+}
+
+void toA1(int row, int col, char *result) {
+    // Convertendo a coluna para letras (base 26)
+    char colStr[10];  // Buffer para armazenar a representação da coluna
+    int index = 0;
+    
+    while (col >= 0) {
+        colStr[index++] = 'A' + (col % 26);
+        col = (col / 26) - 1;  // Ajusta a coluna para a próxima iteração
+    }
+    colStr[index] = '\0';
+
+    // Reverter a string de letras
+    for (int i = 0; i < index / 2; i++) {
+        char temp = colStr[i];
+        colStr[i] = colStr[index - i - 1];
+        colStr[index - i - 1] = temp;
+    }
+
+    // Convertendo a linha para o número (começa com 1)
+    int rowNumber = row + 1;
+    
+    // Formatando a string no formato A1
+    sprintf(result, "%s%d", colStr, rowNumber);
+}
+
 // Função para retornar a precedência dos operadores
 int prec(char c) {
     if (c == '^')
@@ -82,10 +120,6 @@ void infixToPostfix(char s[], char result[]) {
     }
 
     result[resultIndex - 1] = '\0'; // Remove o último espaço e finaliza a string
-}
-
-int coordenada_para_id(int x, int y, int colunas) {
-    return x * colunas + y;
 }
 
 int contemAlpha(char *str) {
@@ -169,34 +203,31 @@ int * extrair_id(char * expressão,int col){
     free(variaveis);
 }
 
+// int main(){
+//     char * aux = (char*) malloc(10000* sizeof(char));
 
-
-
-int main(){
-    char * aux = (char*) malloc(10000* sizeof(char));
-
-    printf("Digite a expressão: ");
-    scanf("%[^\n]%*c",aux);
+//     printf("Digite a expressão: ");
+//     scanf("%[^\n]%*c",aux);
     
-    char * expressão = (char *) malloc(strlen(aux) * sizeof(char));
+//     char * expressão = (char *) malloc(strlen(aux) * sizeof(char));
 
-    strcpy(expressão,aux);
+//     strcpy(expressão,aux);
 
-    char result[1000]; // Para armazenar a expressão pós-fixada
+//     char result[1000]; // Para armazenar a expressão pós-fixada
 
-    // Converte a expressão infixa para pós-fixada
-    infixToPostfix(aux, result);
+//     // Converte a expressão infixa para pós-fixada
+//     infixToPostfix(aux, result);
 
-    printf("Expressão pós-fixada: %s\n", result);
+//     printf("Expressão pós-fixada: %s\n", result);
 
-    // Extrai os IDs (variáveis/operandos) da expressão pós-fixada
-    extrair_id(result, 9);
+//     // Extrai os IDs (variáveis/operandos) da expressão pós-fixada
+//     extrair_id(result, 9);
 
-    free(aux);
-    free(expressão);
+//     free(aux);
+//     free(expressão);
 
 
-    return 0;
-}
+//     return 0;
+// }
 
-//a1+b1*(c1^d1-e1)^(f1+g1*h1)-i1
+// //a1+b1*(c1^d1-e1)^(f1+g1*h1)-i1
