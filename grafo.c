@@ -60,8 +60,8 @@ bool is_Cyclic(Vertice **matrix, int l,int C) {
     return false;
 }
 
-void adicionar_Adjacentes(Vertice ** planilha,Vertice* atual,Vertice* destino,int l,int c){
-    if(planilha == NULL || atual == NULL || destino == NULL) return;
+bool adicionar_Adjacentes(Vertice ** planilha,Vertice* atual,Vertice* destino,int l,int c){
+    if(planilha == NULL || atual == NULL || destino == NULL) return false;
         int indice = atual->numeroAdj;
         //Primeiro
         if(indice == 0){
@@ -78,22 +78,27 @@ void adicionar_Adjacentes(Vertice ** planilha,Vertice* atual,Vertice* destino,in
             printf("Ciclo detectado! Não adicionando a adjacência entre %d e %d.\n", atual->id, destino->id);
             atual->numeroAdj--;
             atual->adj = (Vertice **)realloc(atual->adj, indice * sizeof(Vertice*)); 
-            return; // Remove o último adjacente
+            return false; // Remove o último adjacente
         } else {
             printf("Adjacência adicionada entre %d e %d.\n", atual->id, destino->id);
         }
 
-    return;
+    return true;
 }
 
 void print_celulas(Vertice ** celulas,int lin, int col){
-    for(int i =0;i<lin;i++){
-        printf("[%*s%d%*s]", 1, "", i+1, 1, "");
-        for(int j=0;j<col;j++){
-            printf("[%*s%.2f%*s]", 2, "", celulas[i][j].id, 2, "");
-        }
-        printf("\n");
+    for (int i = 0; i < lin; i++) {
+    int rowPadding = (10 - 1) / 2;  // Centralizando o número da linha
+    printf("[%*s%d%*s] | ", 1, "", i+1, 1, "");
+    for (int j = 0; j < col; j++) {
+        char buffer[20];
+        int len = snprintf(buffer, sizeof(buffer), "%d", celulas[i][j].id);  // Tamanho do número
+        int padding = (10 - len) / 2;  // Calcular o espaçamento para centralizar
+
+        printf("[%*s%d%*s]", padding, "", celulas[i][j].id, 10 - len - padding, "");
     }
+    printf("\n");
+}
 }
 
 void print_alfabeto(int col){
@@ -121,6 +126,8 @@ void print_alfabeto(int col){
     }
     printf("\n");
 }
+
+
 
 // int main(){
 //     Vertice ** celulas;

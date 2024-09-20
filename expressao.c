@@ -2,10 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include "grafo.h"
 
 int coordenada_para_id(int x, int y, int colunas) {
     return x * colunas + y;
@@ -154,53 +151,85 @@ int from_A1_to_Id(char *a1,int C) {
     return  coordenada_para_id(row,col,C);  // Ajusta para zero-based index
 }
 
-int * extrair_id(char * expressão,int col){
+
+char ** extrair_id(char * expressão,int col,int *indice){
     int size = strlen(expressão);
-    int indice = 0;
+    *indice = 0;
     char ** variaveis = (char**) malloc(sizeof(char*));
-    variaveis[indice] = NULL;
+    variaveis[*indice] = NULL;
 
     for(int i =0;i<size;i++){
         int loop = 1;
         int caracter = 0;
         
-        variaveis[indice] = (char *)malloc(sizeof(char));
+        variaveis[*indice] = (char *)malloc(sizeof(char));
 
         while(loop){
             if(expressão[i] == ' ' || expressão[i] == '\0'){
                 loop = 0;
             }else{
-                variaveis[indice] = (char*) realloc(variaveis[indice],(caracter+1) * sizeof(char));
-                variaveis[indice][caracter] = expressão[i];
+                variaveis[*indice] = (char*) realloc(variaveis[*indice],(caracter+1) * sizeof(char));
+                variaveis[*indice][caracter] = expressão[i];
                 caracter++;
             i++;
             }
         }
-            variaveis[indice] = (char*) realloc(variaveis[indice],(caracter+1) * sizeof(char*));
-            variaveis[indice][caracter] = '\0';
-            indice++;
+            variaveis[*indice] = (char*) realloc(variaveis[*indice],(caracter+1) * sizeof(char*));
+            variaveis[*indice][caracter] = '\0';
+            *indice++;
 
-            variaveis = (char **)realloc(variaveis, (indice + 1) * sizeof(char *));
-            variaveis[indice] = NULL;
+            variaveis = (char **)realloc(variaveis, (*indice + 1) * sizeof(char *));
+            variaveis[*indice] = NULL;
 
     }
 
+    return variaveis;
+
+    for(int i =0;i<*indice;i++){
+        free(variaveis[i]);
+    }
+    free(variaveis);
+}
+
+bool add_formula(Vertice ** planilha, int id_Atual,char * expressao,int col,int linha){
+    int indice = 0;
+    char ** variaveis = extrair_id(expressao,col,&indice);
     int * ids = (int*) malloc((indice) * sizeof(int));
     int quantity=0;
+    bool erro;
+
     for(int i = 0;i <indice;i++){
         if(contemAlpha(variaveis[i])){
             ids[quantity++] = from_A1_to_Id(variaveis[i],col);
         }
     }
 
+
+    Vertice * atual = get_from_id(planilha,linha,col,id_Atual);
+
     for(int i = 0;i<quantity;i++){
-        printf("%d\n",ids[i]);
+        Vertice * adjacente = get_from_id(planilha,linha,col,ids[i]);        
+        erro = adicionar_Adjacentes(planilha,atual,adjacente,linha,col);
+
+        if(!erro) return false;
     }
 
-    for(int i =0;i<indice;i++){
-        free(variaveis[i]);
+    int j;
+    char junto[20];
+
+    for(int i =0,j =0;i<strlen(*variaveis);i++){
+        if(contemAlpha(variaveis[i])){
+            itoa(ids[j++],variaveis[i],10);
+        }
+        strcat(junto,variaveis[i]);
     }
-    free(variaveis);
+    
+    char tess[7];
+
+    infixToPostfix(junto,tess);
+
+    printf("%s - ",tess);
+
 }
 
 // int main(){
