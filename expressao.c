@@ -231,6 +231,14 @@ bool add_formula(Vertice ** planilha, int id_Atual,char * expressao,int col,int 
 
     //printf("%s -> %.2f ",junto,resultado);
 
+    free(ids);
+
+    // Liberação de memória (recomendado para evitar vazamento de memória)
+    for (int i = 0; i < indice; i++) {
+        free(variaveis[i]);
+    }
+    free(variaveis);
+
     *valor = resultado;
 
     return true;

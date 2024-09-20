@@ -9,6 +9,7 @@ typedef struct vertice{
     struct vertice ** adj;
     int numeroAdj;
     bool change;
+    bool isText;
 }Vertice;
 
 typedef struct planilha{

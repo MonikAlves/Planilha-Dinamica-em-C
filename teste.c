@@ -37,11 +37,12 @@ int main(){
 
     printf("Digite a celula que quer mudar: ");
     scanf("%[^\n]%*c",aux);
-    printf("e o numero dela: ");
+    printf("e a formula dela: ");
     scanf("%[^\n]%*c",auxform);
 
     bool erro;
     double valor;
+
     erro = add_formula(celulas,from_A1_to_Id(aux,col),auxform,col,lin,&valor);
     if(!erro) printf("Não foi possivel adicionar essa formula, verifique ela");
 
@@ -50,17 +51,19 @@ int main(){
     print_celulas(celulas,lin,col);
 
     
+
+
     printf("Digite a celula que quer mudar: ");
     scanf("%[^\n]%*c",aux);
-    printf("e o numero dela: ");
+    printf("e o texto dela: ");
     scanf("%[^\n]%*c",auxform);
 
-    erro = add_formula(celulas,from_A1_to_Id(aux,col),auxform,col,lin,&valor);
-    if(!erro) printf("Não foi possivel adicionar essa formula, verifique ela");
-
-    get_from_id(celulas,lin,col,from_A1_to_Id(aux,col))->number = valor;
+    get_from_id(celulas,lin,col,from_A1_to_Id(aux,col))->formula = auxform;
+    get_from_id(celulas,lin,col,from_A1_to_Id(aux,col))->isText = true;
+    
 
     print_celulas(celulas,lin,col);
+    atual->formula = text;
 
 
     // Liberação de memória (recomendado para evitar vazamento de memória)

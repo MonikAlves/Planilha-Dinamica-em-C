@@ -77,7 +77,7 @@ bool adicionar_Adjacentes(Vertice ** planilha,Vertice* atual,Vertice* destino,in
         if (is_Cyclic(planilha, l,c)) {
             printf("Ciclo detectado! Não adicionando a adjacência entre %d e %d.\n", atual->id, destino->id);
             atual->numeroAdj--;
-            atual->adj = (Vertice **)realloc(atual->adj, indice * sizeof(Vertice*)); 
+            atual->adj = (Vertice **)realloc(atual->adj,  atual->numeroAdj * sizeof(Vertice*)); 
             return false; // Remove o último adjacente
         } else {
             printf("Adjacência adicionada entre %d e %d.\n", atual->id, destino->id);
@@ -125,8 +125,8 @@ void print_celulas(Vertice ** celulas,int lin, int col){
         char buffer[20];
         int len = snprintf(buffer, sizeof(buffer), "%.2f", celulas[i][j].number);  // Tamanho do número
         int padding = (10 - len) / 2;  // Calcular o espaçamento para centralizar
-
-        printf("[%*s%.2f%*s]", padding, "", celulas[i][j].number, 10 - len - padding, "");
+        if(celulas[i][j].isText)  printf("[%*s%.2f%*s]", padding, "", celulas[i][j].formula, 10 - len - padding, "");
+        else printf("[%*s%.2f%*s]", padding, "", celulas[i][j].number, 10 - len - padding, "");
     }
     printf("\n");
 }
