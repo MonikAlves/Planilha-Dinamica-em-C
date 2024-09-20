@@ -29,9 +29,18 @@ int main(){
     printf("Digite a celula que quer mudar: ");
     scanf("%[^\n]%*c",aux);
     printf("e o numero dela: ");
-    scanf("%d",&auxnum );
+    scanf("%d%*c",&auxnum );
 
     get_from_id(celulas,lin,col,from_A1_to_Id(aux,col))->number = auxnum;
+
+     print_alfabeto(col);
+     printf("————");
+     // Linha de sublinhado leve
+     for (int j = 0; j <= col; j++) {
+             printf("———————————");  // Usar sublinhado suave
+    }
+    printf("\n");
+     print_celulas(celulas,lin,col);
 
     printf("Digite a celula que quer mudar: ");
     scanf("%[^\n]%*c",aux);
@@ -46,12 +55,12 @@ int main(){
     printf("————");
     // Linha de sublinhado leve
     for (int j = 0; j <= col; j++) {
-            printf("———————————");  // Usar sublinhado suave
+             printf("———————————");  // Usar sublinhado suave
     }
     printf("\n");
 
 
-    print_celulas(celulas,lin,col);
+    //print_celulas(celulas,lin,col);
 
 
     // Liberação de memória (recomendado para evitar vazamento de memória)

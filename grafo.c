@@ -7,6 +7,7 @@
 
 
 Vertice * get_from_id(Vertice** planilha,int lin, int col,int id){
+    printf("entrou3");
     for(int i =0;i<lin;i++){
         for(int j=0;j<col;j++){
             if(planilha[i][j].id == id) return &planilha[i][j]; 
@@ -92,10 +93,10 @@ void print_celulas(Vertice ** celulas,int lin, int col){
     printf("[%*s%d%*s] | ", 1, "", i+1, 1, "");
     for (int j = 0; j < col; j++) {
         char buffer[20];
-        int len = snprintf(buffer, sizeof(buffer), "%d", celulas[i][j].id);  // Tamanho do número
+        int len = snprintf(buffer, sizeof(buffer), "%.2f", celulas[i][j].number);  // Tamanho do número
         int padding = (10 - len) / 2;  // Calcular o espaçamento para centralizar
 
-        printf("[%*s%d%*s]", padding, "", celulas[i][j].id, 10 - len - padding, "");
+        printf("[%*s%.2f%*s]", padding, "", celulas[i][j].number, 10 - len - padding, "");
     }
     printf("\n");
 }
