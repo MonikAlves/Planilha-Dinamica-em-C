@@ -23,7 +23,6 @@ Vertice * get_from_id(Vertice** planilha,int lin, int col,int id);
 bool is_Cyclic_Util(Vertice *v, bool visitado[], bool recStack[]) ;
 bool is_Cyclic(Vertice **matrix, int l,int C) ;
 bool adicionar_Adjacentes(Vertice ** planilha,Vertice* atual,Vertice* destino,int l,int c);
-void print_alfabeto(int col);
 void print_celulas(Vertice ** celulas,int L, int C);
 
 

@@ -7,7 +7,6 @@
 
 
 Vertice * get_from_id(Vertice** planilha,int lin, int col,int id){
-    printf("entrou3");
     for(int i =0;i<lin;i++){
         for(int j=0;j<col;j++){
             if(planilha[i][j].id == id) return &planilha[i][j]; 
@@ -88,21 +87,6 @@ bool adicionar_Adjacentes(Vertice ** planilha,Vertice* atual,Vertice* destino,in
 }
 
 void print_celulas(Vertice ** celulas,int lin, int col){
-    for (int i = 0; i < lin; i++) {
-    int rowPadding = (10 - 1) / 2;  // Centralizando o número da linha
-    printf("[%*s%d%*s] | ", 1, "", i+1, 1, "");
-    for (int j = 0; j < col; j++) {
-        char buffer[20];
-        int len = snprintf(buffer, sizeof(buffer), "%.2f", celulas[i][j].number);  // Tamanho do número
-        int padding = (10 - len) / 2;  // Calcular o espaçamento para centralizar
-
-        printf("[%*s%.2f%*s]", padding, "", celulas[i][j].number, 10 - len - padding, "");
-    }
-    printf("\n");
-}
-}
-
-void print_alfabeto(int col){
     printf("[%*s%c%*s] | ", 1, "", " ", 1, "");
     for(int i = 0;i<col;i++){
         int temp = i+1;
@@ -126,8 +110,27 @@ void print_alfabeto(int col){
         printf("[%*s%s%*s]", padding, "", columnName, 10 - padding - 1, "");
     }
     printf("\n");
-}
 
+     printf("————");
+     // Linha de sublinhado leve
+     for (int j = 0; j <= col; j++) {
+             printf("———————————");  // Usar sublinhado suave
+    }
+    printf("\n");
+
+    for (int i = 0; i < lin; i++) {
+    int rowPadding = (10 - 1) / 2;  // Centralizando o número da linha
+    printf("[%*s%d%*s] | ", 1, "", i+1, 1, "");
+    for (int j = 0; j < col; j++) {
+        char buffer[20];
+        int len = snprintf(buffer, sizeof(buffer), "%.2f", celulas[i][j].number);  // Tamanho do número
+        int padding = (10 - len) / 2;  // Calcular o espaçamento para centralizar
+
+        printf("[%*s%.2f%*s]", padding, "", celulas[i][j].number, 10 - len - padding, "");
+    }
+    printf("\n");
+}
+}
 
 
 // int main(){

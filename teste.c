@@ -32,15 +32,8 @@ int main(){
     scanf("%d%*c",&auxnum );
 
     get_from_id(celulas,lin,col,from_A1_to_Id(aux,col))->number = auxnum;
-
-     print_alfabeto(col);
-     printf("————");
-     // Linha de sublinhado leve
-     for (int j = 0; j <= col; j++) {
-             printf("———————————");  // Usar sublinhado suave
-    }
-    printf("\n");
-     print_celulas(celulas,lin,col);
+    
+    print_celulas(celulas,lin,col);
 
     printf("Digite a celula que quer mudar: ");
     scanf("%[^\n]%*c",aux);
@@ -48,19 +41,26 @@ int main(){
     scanf("%[^\n]%*c",auxform);
 
     bool erro;
-    erro = add_formula(celulas,from_A1_to_Id(aux,col),auxform,col,lin);
+    double valor;
+    erro = add_formula(celulas,from_A1_to_Id(aux,col),auxform,col,lin,&valor);
     if(!erro) printf("Não foi possivel adicionar essa formula, verifique ela");
 
-    print_alfabeto(col);
-    printf("————");
-    // Linha de sublinhado leve
-    for (int j = 0; j <= col; j++) {
-             printf("———————————");  // Usar sublinhado suave
-    }
-    printf("\n");
+    get_from_id(celulas,lin,col,from_A1_to_Id(aux,col))->number = valor;
 
+    print_celulas(celulas,lin,col);
 
-    //print_celulas(celulas,lin,col);
+    
+    printf("Digite a celula que quer mudar: ");
+    scanf("%[^\n]%*c",aux);
+    printf("e o numero dela: ");
+    scanf("%[^\n]%*c",auxform);
+
+    erro = add_formula(celulas,from_A1_to_Id(aux,col),auxform,col,lin,&valor);
+    if(!erro) printf("Não foi possivel adicionar essa formula, verifique ela");
+
+    get_from_id(celulas,lin,col,from_A1_to_Id(aux,col))->number = valor;
+
+    print_celulas(celulas,lin,col);
 
 
     // Liberação de memória (recomendado para evitar vazamento de memória)

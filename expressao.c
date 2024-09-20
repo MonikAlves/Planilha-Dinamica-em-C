@@ -187,7 +187,7 @@ char ** extrair_id(char * expressão,int col,int *numero){
     return variaveis;
 }
 
-bool add_formula(Vertice ** planilha, int id_Atual,char * expressao,int col,int linha){
+bool add_formula(Vertice ** planilha, int id_Atual,char * expressao,int col,int linha,double *valor){
     int indice = 0;
     char tess[7];
     infixToPostfix(expressao,tess);
@@ -216,19 +216,24 @@ bool add_formula(Vertice ** planilha, int id_Atual,char * expressao,int col,int 
 
     for(int i =0,j =0;i<indice;i++){
         if(contemAlpha(variaveis[i])){
-            //printf("%s - ",variaveis[i]);
-            sprintf(variaveis[i], "%d", ids[j++]);
+            double valor =get_from_id(planilha,linha,col,ids[j])->number;
+            sprintf(variaveis[i], "%f", valor);
+            j++;
         }
-        printf("%s ! ",variaveis[i]);
         if(i == 0) strcpy(junto,variaveis[i]);
         else strcat(junto,variaveis[i]);
         strcat(junto," ");
     }
     
     
-    printf("%s - ",junto);
 
-    
+    double resultado = calculadora(junto);
+
+    //printf("%s -> %.2f ",junto,resultado);
+
+    *valor = resultado;
+
+    return true;
 
 }
 

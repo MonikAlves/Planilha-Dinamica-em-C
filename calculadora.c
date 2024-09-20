@@ -121,7 +121,7 @@ double calculadora(char* expressão){
 
         }
     }
-    printf("Resultado final: ");
+    //printf("Resultado final: ");
     return getresultado(new);
 
 }

@@ -9,7 +9,7 @@ void toA1(int row, int col, char *result);
 int prec(char c);
 char associativity(char c) ;
 void infixToPostfix(char s[], char result[]) ;
-bool add_formula(Vertice ** planilha, int id_Atual,char * expressao,int col,int linha);
+bool add_formula(Vertice ** planilha, int id_Atual,char * expressao,int col,int linha,double *valor);
 int coordenada_para_id(int x, int y, int colunas) ;
 int contemAlpha(char *str) ;
 int from_A1_to_Id(char *a1,int C);
