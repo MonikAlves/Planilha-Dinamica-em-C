@@ -187,10 +187,11 @@ char ** extrair_id(char * expressão,int col,int *numero){
     return variaveis;
 }
 
-bool add_formula(Vertice ** planilha, int id_Atual,char * expressao,int col,int linha,double *valor){
+bool add_formula(Vertice ** planilha, int id_Atual,char * expressao,int size[]){
     int indice = 0;
     char tess[7];
-
+    int lin = size[0];
+    int col = size[1];
     infixToPostfix(expressao,tess);
     char ** variaveis = extrair_id(tess,col,&indice);
     int * ids = (int*) malloc((indice) * sizeof(int));
@@ -203,12 +204,13 @@ bool add_formula(Vertice ** planilha, int id_Atual,char * expressao,int col,int 
         }
     }
 
-    Vertice * atual = get_from_id(planilha,linha,col,id_Atual);
-    atual->formula = expressao;
+    Vertice * atual = get_from_id(planilha,size,id_Atual);
+    atual->formula = (char*) malloc((strlen(expressao) + 1)* sizeof(char));  // Aloca espaço para a fórmula
+    strcpy(atual->formula, expressao);  // Copia o conteúdo de 'expressao' para 'formula'
 
     for(int i = 0;i<quantity;i++){
-        Vertice * adjacente = get_from_id(planilha,linha,col,ids[i]);        
-        erro = adicionar_Adjacentes(planilha,atual,adjacente,linha,col);
+        Vertice * adjacente = get_from_id(planilha,size,ids[i]);        
+        erro = adicionar_Adjacentes(planilha,atual,adjacente,size);
 
         if(!erro) return false;
     }
@@ -218,7 +220,7 @@ bool add_formula(Vertice ** planilha, int id_Atual,char * expressao,int col,int 
 
     for(int i =0,j =0;i<indice;i++){
         if(contemAlpha(variaveis[i])){
-            double valor =get_from_id(planilha,linha,col,ids[j])->number;
+            double valor =get_from_id(planilha,size,ids[j])->number;
             sprintf(variaveis[i], "%f", valor);
             j++;
         }
@@ -231,7 +233,6 @@ bool add_formula(Vertice ** planilha, int id_Atual,char * expressao,int col,int 
 
     double resultado = calculadora(junto);
     atual->number = resultado;
-
     //printf("%s -> %.2f ",junto,resultado);
 
     free(ids);
@@ -242,11 +243,36 @@ bool add_formula(Vertice ** planilha, int id_Atual,char * expressao,int col,int 
     }
     free(variaveis);
 
-    *valor = resultado;
+    return true;
+
+}
+
+bool mudar_valor(Vertice** planilha,Vertice * atual,int size[],int valor){
+    atual->number = valor;
+
+    if (atual->formula) {
+        free(atual->formula);  // Libera a memória alocada para a fórmula
+        atual->formula = NULL;
+    } 
+    if (atual->adj) {
+        for (int i = 0; i < atual->numeroAdj; i++) {
+            if (atual->adj[i]) {
+                atual->adj[i] = NULL;
+            }
+        }
+        free(atual->adj);
+        atual->adj = NULL; 
+    }
+    atual->numeroAdj = 0;
+
+    if(atual->isText) atual->isText = false;
+
+    
 
     return true;
 
 }
+
 
 // int main(){
 //     char * aux = (char*) malloc(10000* sizeof(char));

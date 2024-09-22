@@ -6,7 +6,9 @@
 #include <ctype.h>
 
 
-Vertice * get_from_id(Vertice** planilha,int lin, int col,int id){
+Vertice * get_from_id(Vertice** planilha,int size[],int id){
+    int lin = size[0];
+    int col = size[1];
     for(int i =0;i<lin;i++){
         for(int j=0;j<col;j++){
             if(planilha[i][j].id == id) return &planilha[i][j]; 
@@ -39,17 +41,19 @@ bool is_Cyclic_Util(Vertice *v, bool visitado[], bool recStack[]) {
     return false;
 }
 // Função principal para verificar ciclos
-bool is_Cyclic(Vertice **matrix, int l,int C) {
-    bool visitado[l * C];
-    bool recStack[l * C];
+bool is_Cyclic(Vertice **matrix, int size[]) {
+    int lin = size[0];
+    int col = size[1];
+    bool visitado[lin * col];
+    bool recStack[lin * col];
 
-    for (int i = 0; i < l * C; i++) {
+    for (int i = 0; i < lin * col; i++) {
         visitado[i] = false;
         recStack[i] = false;
     }
 
-    for (int i = 0; i < l; i++) {
-        for (int j = 0; j < C; j++) {
+    for (int i = 0; i < lin; i++) {
+        for (int j = 0; j < col; j++) {
             Vertice *v = &matrix[i][j];
             if (!visitado[v->id] && is_Cyclic_Util(v, visitado, recStack)) {
                 return true;
@@ -60,7 +64,7 @@ bool is_Cyclic(Vertice **matrix, int l,int C) {
     return false;
 }
 
-bool adicionar_Adjacentes(Vertice ** planilha,Vertice* atual,Vertice* destino,int l,int c){
+bool adicionar_Adjacentes(Vertice ** planilha,Vertice* atual,Vertice* destino,int size[]){
     if(planilha == NULL || atual == NULL || destino == NULL) return false;
         int indice = atual->numeroAdj;
         //Primeiro
@@ -74,7 +78,7 @@ bool adicionar_Adjacentes(Vertice ** planilha,Vertice* atual,Vertice* destino,in
         atual->adj[indice] = destino;
         atual->numeroAdj++;
 
-        if (is_Cyclic(planilha, l,c)) {
+        if (is_Cyclic(planilha, size)) {
             printf("Ciclo detectado! Não adicionando a adjacência entre %d e %d.\n", atual->id, destino->id);
             atual->numeroAdj--;
             atual->adj = (Vertice **)realloc(atual->adj,  atual->numeroAdj * sizeof(Vertice*)); 
@@ -86,7 +90,9 @@ bool adicionar_Adjacentes(Vertice ** planilha,Vertice* atual,Vertice* destino,in
     return true;
 }
 
-void print_celulas(Vertice ** celulas,int lin, int col){
+void print_celulas(Vertice ** celulas,int size[]){
+    int lin = size[0];
+    int col = size[1];
     printf("[%*s%c%*s] | ", 1, "", " ", 1, "");
     for(int i = 0;i<col;i++){
         int temp = i+1;
