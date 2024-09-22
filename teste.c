@@ -11,15 +11,15 @@
 
 // freq/75 * nota/6 (trabalhando com inteiros)
 
-char ** varias_celulas_um_valor(char * intervalo,int size[],int *tamanho){
+char ** varias_celulas(char * intervalo,int size[],int *tamanho,int tipo){
         int col = size[1];
         char *token = strtok(intervalo, ":"); 
         char *inicio = strdup(token); 
         token = strtok(NULL, ":"); 
         char *fim = strdup(token);
 
-        int id_inicio = from_A1_to_Id(inicio, size[1]);
-        int id_fim = from_A1_to_Id(fim, size[1]);
+        int id_inicio = from_A1_to_Id(inicio, size[1],0);
+        int id_fim = from_A1_to_Id(fim, size[1],0);
         if(id_inicio%size[1] != id_fim%size[1]) {
             printf("Só é permitido células com a mesma coluna");
             return NULL;
@@ -87,7 +87,7 @@ char ** scan_celulas(int tipo,int * tamanho,int size[]){
         printf("Digite o intervalo de células (ex: A1:A5): ");
         scanf("%[^\n]%*c", intervalo); // Lê o intervalo
 
-        char ** A1 = varias_celulas_um_valor(intervalo,size,tamanho);
+        char ** A1 = varias_celulas(intervalo,size,tamanho,tipo);
 
         free(intervalo);
 
@@ -101,7 +101,7 @@ char ** scan_celulas(int tipo,int * tamanho,int size[]){
         printf("Digite o intervalo a ser mudado os valores (ex: A1:A5): ");
         scanf("%[^\n]%*c", intervalo); // Lê o intervalo
 
-        char ** A1 = varias_celulas_um_valor(intervalo,size,tamanho);
+        char ** A1 = varias_celulas(intervalo,size,tamanho,tipo);
 
         free(intervalo);
 
@@ -122,8 +122,8 @@ bool numero(Vertice ** planilha,int size[], int tipo){
             printf("Erro ao realizar operação: \n");
             return false;
         }
-    if(tipo) printf("Digite o numero para elas: ");
-    else printf("Digite o numero para ela: ");
+    if(tipo) printf("Digite o numero para elas: \n");
+    else printf("Digite o numero para ela: \n");
 
         
     number = (double*) malloc(tamanho * sizeof(double));
@@ -133,7 +133,7 @@ bool numero(Vertice ** planilha,int size[], int tipo){
     } 
 
     for(int i = 0;i<tamanho;i++){
-        Vertice * atual = get_from_id(planilha,size,from_A1_to_Id(A1[i],size[1]));
+        Vertice * atual = get_from_id(planilha,size,from_A1_to_Id(A1[i],size[1],0));
          if (atual == NULL) {
             printf("Célula não encontrada com id: %d\n",A1[i]);
             
@@ -175,7 +175,7 @@ bool texto(Vertice ** planilha,int size[], int tipo){
     free(aux);
 
     for(int i = 0;i<tamanho;i++){
-        Vertice * atual = get_from_id(planilha,size,from_A1_to_Id(A1[i],size[1]));
+        Vertice * atual = get_from_id(planilha,size,from_A1_to_Id(A1[i],size[1],0));
          if (atual == NULL) {
             printf("Célula não encontrada com id: %d\n",A1[i]);
             free(A1); 
@@ -187,7 +187,6 @@ bool texto(Vertice ** planilha,int size[], int tipo){
         atual->isText = true;
         
     }
-
 
     free(texto);
     for (int i = 0; i < tamanho; i++) {
@@ -209,7 +208,6 @@ bool formula(Vertice ** planilha,int size[], int tipo){
             printf("Erro ao realizar operação: \n");
             return false;
     }
-    printf("tamanho %d",tamanho);
     if(tipo) printf("Digite a formula para elas: ");
     else printf("Digite a formula para ela: ");
 
@@ -220,13 +218,11 @@ bool formula(Vertice ** planilha,int size[], int tipo){
     char * formula = (char *) malloc((strlen(aux)+1) * sizeof(char));
 
     strcpy(formula,aux);
-    printf("aquiiii %s",formula);
     free(aux);
 
     for(int i = 0;i<tamanho;i++){
-        int id_atual = from_A1_to_Id(A1[i],size[1]);
-
-        erro = add_formula(planilha,id_atual,formula,size);
+        int id_atual = from_A1_to_Id(A1[i],size[1],0);
+        add_formula(planilha,id_atual,formula,size,i);
         
         if(!erro) printf("Não foi possivel adicionar esse valor, verifique ele");
     }
@@ -266,15 +262,11 @@ int main(){
     }
 
     
-    numero(celulas,size,0);
-
-    print_celulas(celulas,size);
-
-    formula(celulas,size,0);
-
-    print_celulas(celulas,size);
-
     numero(celulas,size,3);
+
+    print_celulas(celulas,size);
+
+    formula(celulas,size,2);
 
     print_celulas(celulas,size);
 

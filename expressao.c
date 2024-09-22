@@ -18,30 +18,42 @@ int id_para_coluna(int id, int colunas) {
     return id % colunas;
 }
 
-void toA1(int row, int col, char *result) {
+char *toA1(int size[], int id) {
+    int numCols = size[1];  // Número de colunas na planilha
+
+    // Calcula a linha e a coluna a partir do id
+    int rowNumber = (id / numCols) + 1;  // Linha (id dividido pelo número de colunas) + 1
+    int colNumber = id % numCols;        // Coluna (resto da divisão do id pelo número de colunas)
+
     // Convertendo a coluna para letras (base 26)
     char colStr[10];  // Buffer para armazenar a representação da coluna
     int index = 0;
-    
-    while (col >= 0) {
-        colStr[index++] = 'A' + (col % 26);
-        col = (col / 26) - 1;  // Ajusta a coluna para a próxima iteração
+
+    while (colNumber >= 0) {
+        colStr[index++] = 'A' + (colNumber % 26);  // Obter a letra correspondente
+        colNumber = (colNumber / 26) - 1;          // Ajusta para a próxima iteração
     }
     colStr[index] = '\0';
 
-    // Reverter a string de letras
+    // Reverter a string de letras, já que as letras estão na ordem inversa
     for (int i = 0; i < index / 2; i++) {
         char temp = colStr[i];
         colStr[i] = colStr[index - i - 1];
         colStr[index - i - 1] = temp;
     }
 
-    // Convertendo a linha para o número (começa com 1)
-    int rowNumber = row + 1;
-    
+    // Calcula o número de dígitos necessários para a linha
+    int numDigits = snprintf(NULL, 0, "%d", rowNumber);
+
+    // Aloca memória suficiente para colStr + número + '\0'
+    char *result = (char*) malloc((strlen(colStr) + numDigits + 1) * sizeof(char));
+
     // Formatando a string no formato A1
     sprintf(result, "%s%d", colStr, rowNumber);
+
+    return result;
 }
+
 
 // Função para retornar a precedência dos operadores
 int prec(char c) {
@@ -130,7 +142,7 @@ int contemAlpha(char *str) {
     return 0; // Retorna 0 se não encontrar nenhuma letra
 }
 
-int from_A1_to_Id(char *a1,int C) {
+int from_A1_to_Id(char *a1,int C,int tipo) {
     // Encontrar a parte da coluna
     char *p = a1;
     int colNumber = 0;
@@ -148,8 +160,7 @@ int from_A1_to_Id(char *a1,int C) {
     // Encontrar a parte do número da linha
     int rowNumber = atoi(p);
     row = rowNumber - 1;
-    
-    return  coordenada_para_id(row,col,C);  // Ajusta para zero-based index
+    return coordenada_para_id(row+tipo,col,C);  // Ajusta para zero-based index
 }
 
 
@@ -187,7 +198,7 @@ char ** extrair_id(char * expressão,int col,int *numero){
     return variaveis;
 }
 
-bool add_formula(Vertice ** planilha, int id_Atual,char * expressao,int size[]){
+bool add_formula(Vertice ** planilha, int id_Atual,char * expressao,int size[],int tipo){
     int indice = 0;
     char *aux = (char*) malloc(10000* sizeof(char));
     infixToPostfix(expressao,aux);
@@ -201,7 +212,7 @@ bool add_formula(Vertice ** planilha, int id_Atual,char * expressao,int size[]){
 
     for(int i = 0;i <indice;i++){
         if(contemAlpha(variaveis[i])){
-            ids[quantity++] = from_A1_to_Id(variaveis[i],size[1]);
+            ids[quantity++] = from_A1_to_Id(variaveis[i],size[1],tipo);
         }
     }
 
@@ -232,7 +243,7 @@ bool add_formula(Vertice ** planilha, int id_Atual,char * expressao,int size[]){
         strcat(junto, variaveis[i]);
         strcat(junto, " ");
     }
-    printf("junto - %s",junto);
+
     double resultado = calculadora(junto);
     atual->number = resultado;
     //printf("%s -> %.2f ",junto,resultado);
@@ -273,7 +284,7 @@ bool recalcular_valor_formula(Vertice ** planilha, Vertice * atual, int size[]) 
     
     for (int i = 0; i < indice; i++) {
         if (contemAlpha(variaveis[i])) {
-            ids[quantity++] = from_A1_to_Id(variaveis[i], size[1]);
+            ids[quantity++] = from_A1_to_Id(variaveis[i], size[1],0);
         }
     }
 
@@ -311,7 +322,7 @@ bool recalcular_valor_formula(Vertice ** planilha, Vertice * atual, int size[]) 
 }
 
 
-bool mudar_valor(Vertice** planilha,Vertice * atual,int size[],int valor,int tipo){
+bool mudar_valor(Vertice** planilha,Vertice * atual,int size[],int valor){
     atual->number = valor;
     if (atual->formula) {
         free(atual->formula);  // Libera a memória alocada para a fórmula

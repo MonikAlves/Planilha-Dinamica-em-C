@@ -13,7 +13,8 @@ Vertice * get_from_id(Vertice** planilha,int size[],int id){
             if(planilha[i][j].id == id) return &planilha[i][j]; 
         }
     }
-    printf("célula com id = %d não encontrada",id);
+    char* not = toA1(size,id);
+    printf("célula %s não encontrada\n",not);
     return NULL;
 }
 
@@ -82,7 +83,6 @@ void atualizar_formulas(Vertice **planilha, int size[]) {
     int lin = size[0];
     int col = size[1];
     bool visitado[lin * col];
-    printf("veio ate aqui");
 
     // Inicializa o array de visitados
     for (int i = 0; i < lin * col; i++) {
