@@ -5,7 +5,6 @@
 #include <string.h>
 #include <ctype.h>
 
-
 Vertice * get_from_id(Vertice** planilha,int size[],int id){
     int lin = size[0];
     int col = size[1];
@@ -74,7 +73,6 @@ void recalcular_formulas(Vertice** planilha, Vertice * atual, bool visitado[],in
             Vertice *adj = atual->adj[i];
             recalcular_formulas(planilha,adj, visitado,size);
         }
-
         // Após processar os adjacentes, recalcula o valor da célula atual
         if (atual->formula != NULL) recalcular_valor_formula(planilha,atual,size);
     }
@@ -131,45 +129,74 @@ bool adicionar_Adjacentes(Vertice ** planilha,Vertice* atual,Vertice* destino,in
 void print_celulas(Vertice ** celulas,int size[]){
     int lin = size[0];
     int col = size[1];
-    printf("[%*s%c%*s] | ", 1, "", " ", 1, "");
-    for(int i = 0;i<col;i++){
-        int temp = i+1;
+int maxLength[col];
+    memset(maxLength, 0, sizeof(maxLength)); // Inicializa com 0
+
+    // Primeiro, calcular os tamanhos máximos
+    for (int j = 0; j < col; j++) {
+        for (int i = 0; i < lin; i++) {
+            int len;
+            if (celulas[i][j].isText) {
+                len = strlen(celulas[i][j].formula);
+            } else {
+                char buffer[20];
+                snprintf(buffer, sizeof(buffer), "%.2f", celulas[i][j].number);
+                len = strlen(buffer);
+            }
+            if (len > maxLength[j]) {
+                maxLength[j] = len; // Atualiza o comprimento máximo
+            }
+        }
+    }
+
+    // Imprimir cabeçalho
+    printf("[%*s%c%*s] | ", 1, "", ' ', 1, "");
+    for (int i = 0; i < col; i++) {
         char columnName[10];
+        int temp = i + 1;
         int index = 0;
 
         while (temp > 0) {
             temp -= 1;
-            columnName[index++] = ('A') + (((temp) % 26));
+            columnName[index++] = 'A' + ((temp) % 26);
             temp /= 26;
         }
 
+        // Reverter a string de letras
         for (int j = 0; j < index / 2; j++) {
             char tempChar = columnName[j];
             columnName[j] = columnName[index - j - 1];
             columnName[index - j - 1] = tempChar;
         }
-
         columnName[index] = '\0';
-        int padding = (10 - 1) / 2;  // Calcular o espaçamento para centralizar
-        printf("[%*s%s%*s]", padding, "", columnName, 10 - padding - 1, "");
+
+        int padding = (maxLength[i] - strlen(columnName)) / 2; // Calcular o espaçamento
+        printf("[%*s %s%*s]", padding + 2, "", columnName, maxLength[i] - padding - strlen(columnName) + 2, ""); // +2 para o espaço adicional
     }
     printf("\n");
 
-    printf("————");
+    printf("———");
     for (int j = 0; j <= col; j++) {
-        printf("———————————");  
+        printf("———————————");
     }
     printf("\n");
 
+    // Imprimir as células
     for (int i = 0; i < lin; i++) {
-        int rowPadding = (10 - 1) / 2; 
-        printf("[%*s%d%*s] | ", 1, "", i+1, 1, "");
+        printf("[%*s%d%*s] | ", 1, "", i + 1, 1, "");
         for (int j = 0; j < col; j++) {
             char buffer[20];
-            int len = snprintf(buffer, sizeof(buffer), "%.2f", celulas[i][j].number);  // Tamanho do número
-            int padding = (10 - len) / 2;  // Calcular o espaçamento para centralizar
-            if(celulas[i][j].isText)  printf("[%*s%s%*s]", padding, "", celulas[i][j].formula, 10 - len - padding, "");
-            else printf("[%*s%.2f%*s]", padding, "", celulas[i][j].number, 10 - len - padding, "");
+            char *content;
+            if (celulas[i][j].isText) {
+                content = celulas[i][j].formula; // Texto
+            } else {
+                snprintf(buffer, sizeof(buffer), "%.2f", celulas[i][j].number); // Número formatado
+                content = buffer;
+            }
+
+            int len = strlen(content);
+            int padding = (maxLength[j] - len) / 2; // Centraliza com base no comprimento máximo
+            printf("[%*s %s%*s]", padding + 2, "", content, maxLength[j] - padding - len + 2, ""); // +2 para o espaço adicional
         }
         printf("\n");
     }
