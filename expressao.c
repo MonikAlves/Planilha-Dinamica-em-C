@@ -190,6 +190,7 @@ char ** extrair_id(char * expressão,int col,int *numero){
 bool add_formula(Vertice ** planilha, int id_Atual,char * expressao,int col,int linha,double *valor){
     int indice = 0;
     char tess[7];
+
     infixToPostfix(expressao,tess);
     char ** variaveis = extrair_id(tess,col,&indice);
     int * ids = (int*) malloc((indice) * sizeof(int));
@@ -203,6 +204,7 @@ bool add_formula(Vertice ** planilha, int id_Atual,char * expressao,int col,int 
     }
 
     Vertice * atual = get_from_id(planilha,linha,col,id_Atual);
+    atual->formula = expressao;
 
     for(int i = 0;i<quantity;i++){
         Vertice * adjacente = get_from_id(planilha,linha,col,ids[i]);        
@@ -228,6 +230,7 @@ bool add_formula(Vertice ** planilha, int id_Atual,char * expressao,int col,int 
     
 
     double resultado = calculadora(junto);
+    atual->number = resultado;
 
     //printf("%s -> %.2f ",junto,resultado);
 

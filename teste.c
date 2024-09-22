@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "stdbool.h"
 #include "calculadora.h"
 #include "expressao.h"
 #include "grafo.h"
@@ -23,6 +24,7 @@ int main(){
             celulas[i][j].id =  coordenada_para_id(i,j,col);
             celulas[i][j].adj = NULL;
             celulas[i][j].numeroAdj = 0; 
+            celulas[i][j].isText = false;
         }
     }
 
@@ -46,24 +48,17 @@ int main(){
     erro = add_formula(celulas,from_A1_to_Id(aux,col),auxform,col,lin,&valor);
     if(!erro) printf("Não foi possivel adicionar essa formula, verifique ela");
 
-    get_from_id(celulas,lin,col,from_A1_to_Id(aux,col))->number = valor;
-
     print_celulas(celulas,lin,col);
-
-    
-
 
     printf("Digite a celula que quer mudar: ");
     scanf("%[^\n]%*c",aux);
     printf("e o texto dela: ");
     scanf("%[^\n]%*c",auxform);
-
     get_from_id(celulas,lin,col,from_A1_to_Id(aux,col))->formula = auxform;
     get_from_id(celulas,lin,col,from_A1_to_Id(aux,col))->isText = true;
     
 
     print_celulas(celulas,lin,col);
-    atual->formula = text;
 
 
     // Liberação de memória (recomendado para evitar vazamento de memória)

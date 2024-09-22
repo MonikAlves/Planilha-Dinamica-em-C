@@ -111,25 +111,24 @@ void print_celulas(Vertice ** celulas,int lin, int col){
     }
     printf("\n");
 
-     printf("————");
-     // Linha de sublinhado leve
-     for (int j = 0; j <= col; j++) {
-             printf("———————————");  // Usar sublinhado suave
+    printf("————");
+    for (int j = 0; j <= col; j++) {
+        printf("———————————");  
     }
     printf("\n");
 
     for (int i = 0; i < lin; i++) {
-    int rowPadding = (10 - 1) / 2;  // Centralizando o número da linha
-    printf("[%*s%d%*s] | ", 1, "", i+1, 1, "");
-    for (int j = 0; j < col; j++) {
-        char buffer[20];
-        int len = snprintf(buffer, sizeof(buffer), "%.2f", celulas[i][j].number);  // Tamanho do número
-        int padding = (10 - len) / 2;  // Calcular o espaçamento para centralizar
-        if(celulas[i][j].isText)  printf("[%*s%.2f%*s]", padding, "", celulas[i][j].formula, 10 - len - padding, "");
-        else printf("[%*s%.2f%*s]", padding, "", celulas[i][j].number, 10 - len - padding, "");
+        int rowPadding = (10 - 1) / 2; 
+        printf("[%*s%d%*s] | ", 1, "", i+1, 1, "");
+        for (int j = 0; j < col; j++) {
+            char buffer[20];
+            int len = snprintf(buffer, sizeof(buffer), "%.2f", celulas[i][j].number);  // Tamanho do número
+            int padding = (10 - len) / 2;  // Calcular o espaçamento para centralizar
+            if(celulas[i][j].isText)  printf("[%*s%s%*s]", padding, "", celulas[i][j].formula, 10 - len - padding, "");
+            else printf("[%*s%.2f%*s]", padding, "", celulas[i][j].number, 10 - len - padding, "");
+        }
+        printf("\n");
     }
-    printf("\n");
-}
 }
 
 

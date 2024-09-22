@@ -1,4 +1,4 @@
-#include <stdbool.h>
+#include "stdbool.h"
 #ifndef __GRAFO_H__
 #define __GRAFO_H__
 
@@ -8,16 +8,9 @@ typedef struct vertice{
     char * formula;
     struct vertice ** adj;
     int numeroAdj;
-    bool change;
     bool isText;
+    bool change;
 }Vertice;
-
-typedef struct planilha{
-    int linha;
-    int coluna;
-    Vertice ** celulas;
-}Planilha;
-
 
 
 Vertice * get_from_id(Vertice** planilha,int lin, int col,int id);
