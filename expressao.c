@@ -299,7 +299,6 @@ bool recalcular_valor_formula(Vertice ** planilha, Vertice * atual, int size[]) 
 
 bool mudar_valor(Vertice** planilha,Vertice * atual,int size[],int valor){
     atual->number = valor;
-
     if (atual->formula) {
         free(atual->formula);  // Libera a memória alocada para a fórmula
         atual->formula = NULL;
