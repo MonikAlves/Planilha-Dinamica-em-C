@@ -26,6 +26,7 @@ int main(){
             celulas[i][j].adj = NULL;
             celulas[i][j].numeroAdj = 0; 
             celulas[i][j].isText = false;
+            celulas[i][j].formula = NULL;
         }
     }
 
@@ -50,12 +51,6 @@ int main(){
     if(!erro) printf("Não foi possivel adicionar essa formula, verifique ela");
 
     print_celulas(celulas,size);
-
-    printf("\nTESTE");
-    printf("\nformula:%s",get_from_id(celulas,size,from_A1_to_Id(aux,size[1]))->formula);
-    printf("\nnumero Adj:%d",get_from_id(celulas,size,from_A1_to_Id(aux,size[1]))->numeroAdj);
-    printf("\nAdj:%s",get_from_id(celulas,size,from_A1_to_Id(aux,size[1]))->adj);
-    printf("\nis text:%d\n",get_from_id(celulas,size,from_A1_to_Id(aux,size[1]))->isText);
 
     // printf("Digite a celula que quer mudar: ");
     // scanf("%[^\n]%*c",aux);
@@ -82,15 +77,9 @@ int main(){
 
     erro = mudar_valor(celulas,celula_atual,size,auxnum);
     if(!erro) printf("Não foi possivel adicionar essa formula, verifique ela");
+
+        print_celulas(celulas,size);
     
-    print_celulas(celulas,size);
-    printf("\nTESTE");
-    printf("\nformula:%s",get_from_id(celulas,size,from_A1_to_Id(aux,size[1]))->formula);
-    printf("\nnumero Adj:%d",get_from_id(celulas,size,from_A1_to_Id(aux,size[1]))->numeroAdj);
-    printf("\nAdj:%s",get_from_id(celulas,size,from_A1_to_Id(aux,size[1]))->adj);
-    printf("\nis text:%s\n",get_from_id(celulas,size,from_A1_to_Id(aux,size[1]))->isText);
-
-
     // Liberação de memória (recomendado para evitar vazamento de memória)
     for (int i = 0; i < size[0]; i++) {
         free(celulas[i]);

@@ -190,17 +190,15 @@ char ** extrair_id(char * expressão,int col,int *numero){
 bool add_formula(Vertice ** planilha, int id_Atual,char * expressao,int size[]){
     int indice = 0;
     char tess[7];
-    int lin = size[0];
-    int col = size[1];
     infixToPostfix(expressao,tess);
-    char ** variaveis = extrair_id(tess,col,&indice);
+    char ** variaveis = extrair_id(tess,size[1],&indice);
     int * ids = (int*) malloc((indice) * sizeof(int));
     int quantity=0;
     bool erro;
 
     for(int i = 0;i <indice;i++){
         if(contemAlpha(variaveis[i])){
-            ids[quantity++] = from_A1_to_Id(variaveis[i],col);
+            ids[quantity++] = from_A1_to_Id(variaveis[i],size[1]);
         }
     }
 
@@ -247,6 +245,58 @@ bool add_formula(Vertice ** planilha, int id_Atual,char * expressao,int size[]){
 
 }
 
+bool recalcular_valor_formula(Vertice ** planilha, Vertice * atual, int size[]) {
+    if (atual->formula == NULL) {
+        return false; // Se não há fórmula, nada a recalcular
+    }
+
+    int indice = 0;
+    char tess[7];
+    
+    // Converte a fórmula para a notação pós-fixada
+    infixToPostfix(atual->formula, tess);
+    
+    // Extrai os IDs das variáveis usadas na fórmula
+    char **variaveis = extrair_id(tess, size[1], &indice);
+    int *ids = (int*) malloc((indice) * sizeof(int));
+    int quantity = 0;
+    
+    for (int i = 0; i < indice; i++) {
+        if (contemAlpha(variaveis[i])) {
+            ids[quantity++] = from_A1_to_Id(variaveis[i], size[1]);
+        }
+    }
+
+    // Constrói a fórmula com os valores dos adjacentes
+    int j;
+    char junto[20];
+    
+    for (int i = 0, j = 0; i < indice; i++) {
+        if (contemAlpha(variaveis[i])) {
+            double valor = get_from_id(planilha, size, ids[j])->number;
+            sprintf(variaveis[i], "%f", valor);
+            j++;
+        }
+        if (i == 0) strcpy(junto, variaveis[i]);
+        else strcat(junto, variaveis[i]);
+        strcat(junto, " ");
+    }
+
+    // Calcula o resultado da fórmula reconstruída
+    double resultado = calculadora(junto);
+    atual->number = resultado; // Atualiza o valor na célula
+
+    // Libera memória alocada
+    free(ids);
+    for (int i = 0; i < indice; i++) {
+        free(variaveis[i]);
+    }
+    free(variaveis);
+
+    return true;
+}
+
+
 bool mudar_valor(Vertice** planilha,Vertice * atual,int size[],int valor){
     atual->number = valor;
 
@@ -267,7 +317,7 @@ bool mudar_valor(Vertice** planilha,Vertice * atual,int size[],int valor){
 
     if(atual->isText) atual->isText = false;
 
-    
+    atualizar_formulas(planilha,size);
 
     return true;
 

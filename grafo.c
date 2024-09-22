@@ -40,6 +40,7 @@ bool is_Cyclic_Util(Vertice *v, bool visitado[], bool recStack[]) {
     recStack[v->id] = false;
     return false;
 }
+
 // Função principal para verificar ciclos
 bool is_Cyclic(Vertice **matrix, int size[]) {
     int lin = size[0];
@@ -64,6 +65,43 @@ bool is_Cyclic(Vertice **matrix, int size[]) {
     return false;
 }
 
+void recalcular_formulas(Vertice** planilha, Vertice * atual, bool visitado[],int size[]) {
+    if (!visitado[atual->id]) {
+        visitado[atual->id] = true;
+
+        // Percorre os adjacentes primeiro (DFS vai ao fundo da dependência)
+        for (int i = 0; i < atual->numeroAdj; i++) {
+            Vertice *adj = atual->adj[i];
+            recalcular_formulas(planilha,adj, visitado,size);
+        }
+
+        // Após processar os adjacentes, recalcula o valor da célula atual
+        if (atual->formula != NULL) recalcular_valor_formula(planilha,atual,size);
+    }
+}
+
+void atualizar_formulas(Vertice **planilha, int size[]) {
+    int lin = size[0];
+    int col = size[1];
+    bool visitado[lin * col];
+
+    // Inicializa o array de visitados
+    for (int i = 0; i < lin * col; i++) {
+        visitado[i] = false;
+    }
+
+    // Percorre toda a matriz de vértices
+    for (int i = 0; i < lin; i++) {
+        for (int j = 0; j < col; j++) {
+            Vertice *atual = &planilha[i][j];
+            if (!visitado[atual->id]) {
+                if(atual->formula) recalcular_formulas(planilha,atual, visitado,size);
+            }
+        }
+    }
+}
+
+
 bool adicionar_Adjacentes(Vertice ** planilha,Vertice* atual,Vertice* destino,int size[]){
     if(planilha == NULL || atual == NULL || destino == NULL) return false;
         int indice = atual->numeroAdj;
@@ -84,7 +122,7 @@ bool adicionar_Adjacentes(Vertice ** planilha,Vertice* atual,Vertice* destino,in
             atual->adj = (Vertice **)realloc(atual->adj,  atual->numeroAdj * sizeof(Vertice*)); 
             return false; // Remove o último adjacente
         } else {
-            printf("Adjacência adicionada entre %d e %d.\n", atual->id, destino->id);
+            //printf("Adjacência adicionada entre %d e %d.\n", atual->id, destino->id);
         }
 
     return true;
