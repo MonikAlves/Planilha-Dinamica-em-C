@@ -4,6 +4,66 @@
 #include "expressao.h"
 #include "grafo.h"
 
+// mudar um valor 0
+// mudar varios valores com o mesmo 1
+// mudar varios valores mudando a cada linha 2
+// mudar varios valores por conparação 3
+
+// freq/75 * nota/6 (trabalhando com inteiros)
+
+char ** varias_celulas_um_valor(char * intervalo,int size[],int *tamanho){
+        int col = size[1];
+        char *token = strtok(intervalo, ":"); 
+        char *inicio = strdup(token); 
+        token = strtok(NULL, ":"); 
+        char *fim = strdup(token);
+
+        int id_inicio = from_A1_to_Id(inicio, size[1]);
+        int id_fim = from_A1_to_Id(fim, size[1]);
+        if(id_inicio%size[1] != id_fim%size[1]) {
+            printf("Só é permitido células com a mesma coluna");
+            return NULL;
+        }
+        int columnNumber = id_inicio % size[1]; 
+        int temp = columnNumber + 1;
+        char columnName[10];
+        int index = 0;
+
+        while (temp > 0) {
+            temp -= 1;
+            columnName[index++] = ('A') + (temp % 26);
+            temp /= 26;
+        }
+
+        for (int j = 0; j < index / 2; j++) {
+            char tempChar = columnName[j];
+            columnName[j] = columnName[index - j - 1];
+            columnName[index - j - 1] = tempChar;
+        }
+
+        columnName[index] = '\0'; 
+        if (id_inicio == -1 || id_fim == -1 || id_inicio > id_fim) {
+            printf("Intervalo inválido!\n");
+            free(inicio);
+            free(fim);
+            free(intervalo);
+            return NULL;
+        }
+
+        *tamanho = atoi(&fim[1]) - atoi(&inicio[1]) + 1;
+
+        char ** A1 = (char **) malloc((*tamanho) * sizeof(char*));
+        for (int i = 0; i < *tamanho; i++) {
+            A1[i] = (char *) malloc(3 * sizeof(char)); 
+            sprintf(A1[i], "%s%d",columnName, atoi(&inicio[1]) + i);
+        }
+
+        free(inicio);
+        free(fim);
+        return A1;
+    
+}
+
 char ** scan_celulas(int tipo,int * tamanho,int size[]){
     if(tipo == 0){
         *tamanho = 1;
@@ -13,84 +73,47 @@ char ** scan_celulas(int tipo,int * tamanho,int size[]){
         scanf("%[^\n]%*c",aux);
         
         char ** A1 = (char **) malloc((*tamanho) * sizeof(char*));
-        A1[0] = (char*) malloc(strlen(aux) * sizeof(char));
+        A1[0] = (char*) malloc((strlen(aux)+1) * sizeof(char));
 
         strcpy(A1[0],aux);
         free(aux);
+
         return A1;
     }
-    if(tipo == 1){
+
+    if(tipo == 1 || tipo == 2){
         char *intervalo = (char *) malloc(10000 * sizeof(char)); // Aloca espaço para o intervalo
 
         printf("Digite o intervalo de células (ex: A1:A5): ");
         scanf("%[^\n]%*c", intervalo); // Lê o intervalo
 
-        // Divide o intervalo em duas partes: início e fim
-        char *token = strtok(intervalo, ":"); // Obtém a primeira parte
-        char *inicio = strdup(token); // Armazena a célula inicial
-        token = strtok(NULL, ":"); // Obtém a segunda parte
-        char *fim = strdup(token); // Armazena a célula final
+        char ** A1 = varias_celulas_um_valor(intervalo,size,tamanho);
 
-        // Converte as células inicial e final para IDs
-        int id_inicio = from_A1_to_Id(inicio, size[1]);
-        int id_fim = from_A1_to_Id(fim, size[1]);
-        if(id_inicio%size[1] != id_fim%size[1]) {
-            printf("Só é permitido células com a mesma coluna");
-            return NULL;
-        }
-        int columnNumber = id_inicio % size[1]; // size[1] é o número de colunas
-        int temp = columnNumber + 1; // Ajusta para o formato 1-base
-        char columnName[10];
-        int index = 0;
-
-        // Converte o número da coluna para a letra correspondente
-        while (temp > 0) {
-            temp -= 1;
-            columnName[index++] = ('A') + (temp % 26);
-            temp /= 26;
-        }
-
-        // Reverte a string para obter a ordem correta
-        for (int j = 0; j < index / 2; j++) {
-            char tempChar = columnName[j];
-            columnName[j] = columnName[index - j - 1];
-            columnName[index - j - 1] = tempChar;
-        }
-
-        columnName[index] = '\0'; // Finaliza a string
-
-
-        // Valida se os IDs estão dentro dos limites da planilha
-        if (id_inicio == -1 || id_fim == -1 || id_inicio > id_fim) {
-            printf("Intervalo inválido!\n");
-            free(inicio);
-            free(fim);
-            free(intervalo);
-            return NULL; // Retorna NULL em caso de erro
-        }
-         // Converte a parte numérica da célula final
-
-        // Calcula a quantidade de células entre as linhas
-        *tamanho = atoi(&fim[1]) - atoi(&inicio[1]) + 1;
-
-    // Adiciona o loop para popular as células no vetor A1
-        char ** A1 = (char **) malloc((*tamanho) * sizeof(char*));
-        for (int i = 0; i < *tamanho; i++) {
-            A1[i] = (char *) malloc(3 * sizeof(char)); // Aloca espaço para a célula (ex: "A1")
-            sprintf(A1[i], "%s%d",columnName, atoi(&inicio[1]) + i); // Constrói a célula (ex: "A1", "A2", ...)
-        }
-
-        // Libera a memória alocada
-        free(inicio);
-        free(fim);
         free(intervalo);
-        return A1;// Retorna os IDs das células
+
+        return A1;
     }
+
+    if(tipo == 3){
+
+        char *intervalo = (char *) malloc(10000 * sizeof(char)); // Aloca espaço para o intervalo
+
+        printf("Digite o intervalo a ser mudado os valores (ex: A1:A5): ");
+        scanf("%[^\n]%*c", intervalo); // Lê o intervalo
+
+        char ** A1 = varias_celulas_um_valor(intervalo,size,tamanho);
+
+        free(intervalo);
+
+        return A1;
+        
+    }
+
     return NULL;    
 }
 
 bool numero(Vertice ** planilha,int size[], int tipo){
-    double number;
+    double * number;
     bool erro;
     int tamanho;
 
@@ -102,7 +125,12 @@ bool numero(Vertice ** planilha,int size[], int tipo){
     if(tipo) printf("Digite o numero para elas: ");
     else printf("Digite o numero para ela: ");
 
-    scanf("%lf%*c",&number);
+        
+    number = (double*) malloc(tamanho * sizeof(double));
+    for(int i = 0; i<tamanho;i++){
+        printf("Digite o valor para %s: ",A1[i]);
+        scanf("%lf%*c",&number[i]);
+    } 
 
     for(int i = 0;i<tamanho;i++){
         Vertice * atual = get_from_id(planilha,size,from_A1_to_Id(A1[i],size[1]));
@@ -112,7 +140,7 @@ bool numero(Vertice ** planilha,int size[], int tipo){
             return false;
         }
 
-        erro = mudar_valor(planilha,atual,size,number);
+        erro = mudar_valor(planilha,atual,size,number[i]);
         
         if(!erro) printf("Não foi possivel adicionar esse valor, verifique ele");
     }
@@ -180,7 +208,8 @@ bool formula(Vertice ** planilha,int size[], int tipo){
      if (A1 == NULL) {
             printf("Erro ao realizar operação: \n");
             return false;
-        }
+    }
+    printf("tamanho %d",tamanho);
     if(tipo) printf("Digite a formula para elas: ");
     else printf("Digite a formula para ela: ");
 
@@ -188,9 +217,10 @@ bool formula(Vertice ** planilha,int size[], int tipo){
     
     scanf("%[^\n]%*c",aux);
         
-    char * formula = (char *) malloc(strlen(aux) * sizeof(char));
+    char * formula = (char *) malloc((strlen(aux)+1) * sizeof(char));
 
     strcpy(formula,aux);
+    printf("aquiiii %s",formula);
     free(aux);
 
     for(int i = 0;i<tamanho;i++){
@@ -240,11 +270,11 @@ int main(){
 
     print_celulas(celulas,size);
 
-    formula(celulas,size,1);
+    formula(celulas,size,0);
 
     print_celulas(celulas,size);
 
-    texto(celulas,size,1);
+    numero(celulas,size,3);
 
     print_celulas(celulas,size);
 

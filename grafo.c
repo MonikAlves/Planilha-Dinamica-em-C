@@ -82,6 +82,7 @@ void atualizar_formulas(Vertice **planilha, int size[]) {
     int lin = size[0];
     int col = size[1];
     bool visitado[lin * col];
+    printf("veio ate aqui");
 
     // Inicializa o array de visitados
     for (int i = 0; i < lin * col; i++) {
@@ -94,6 +95,7 @@ void atualizar_formulas(Vertice **planilha, int size[]) {
             Vertice *atual = &planilha[i][j];
             if (!visitado[atual->id]) {
                 if(atual->formula) recalcular_formulas(planilha,atual, visitado,size);
+                visitado[atual->id] = true; 
             }
         }
     }
@@ -175,9 +177,16 @@ int maxLength[col];
     }
     printf("\n");
 
-    printf("———");
+    // Imprimir linha de separação
+    printf(" ————");
     for (int j = 0; j <= col; j++) {
-        printf("———————————");
+        printf("———");  // Adiciona linha de separação
+        if (j < col) {
+            int totalPadding = maxLength[j] + 4; // Total de padding para cada coluna
+            for (int p = 0; p < totalPadding; p++) {
+                printf("—");
+            }
+        }
     }
     printf("\n");
 

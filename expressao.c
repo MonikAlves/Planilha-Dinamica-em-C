@@ -189,9 +189,12 @@ char ** extrair_id(char * expressão,int col,int *numero){
 
 bool add_formula(Vertice ** planilha, int id_Atual,char * expressao,int size[]){
     int indice = 0;
-    char tess[7];
-    infixToPostfix(expressao,tess);
-    char ** variaveis = extrair_id(tess,size[1],&indice);
+    char *aux = (char*) malloc(10000* sizeof(char));
+    infixToPostfix(expressao,aux);
+    char ** variaveis = extrair_id(aux,size[1],&indice);
+
+    free(aux);
+
     int * ids = (int*) malloc((indice) * sizeof(int));
     int quantity=0;
     bool erro;
@@ -214,25 +217,27 @@ bool add_formula(Vertice ** planilha, int id_Atual,char * expressao,int size[]){
     }
 
     int j;
-    char junto[20];
+    char *junto = (char *)malloc(1 * sizeof(char));
+    junto[0] = '\0';
 
+    size_t total_length = 1;
     for(int i =0,j =0;i<indice;i++){
         if(contemAlpha(variaveis[i])){
             double valor =get_from_id(planilha,size,ids[j])->number;
-            sprintf(variaveis[i], "%f", valor);
+            sprintf(variaveis[i], "%lf", valor);
             j++;
         }
-        if(i == 0) strcpy(junto,variaveis[i]);
-        else strcat(junto,variaveis[i]);
-        strcat(junto," ");
+        total_length += strlen(variaveis[i]) + 1; 
+        junto = (char *) realloc(junto,total_length * sizeof(char));
+        strcat(junto, variaveis[i]);
+        strcat(junto, " ");
     }
-    
-    
-
+    printf("junto - %s",junto);
     double resultado = calculadora(junto);
     atual->number = resultado;
     //printf("%s -> %.2f ",junto,resultado);
 
+    free(junto);
     free(ids);
 
     // Liberação de memória (recomendado para evitar vazamento de memória)
@@ -251,13 +256,18 @@ bool recalcular_valor_formula(Vertice ** planilha, Vertice * atual, int size[]) 
     }
 
     int indice = 0;
-    char tess[7];
+    
+    char *aux = (char*) malloc(10000* sizeof(char));
+    
     
     // Converte a fórmula para a notação pós-fixada
-    infixToPostfix(atual->formula, tess);
+    infixToPostfix(atual->formula, aux);
     
     // Extrai os IDs das variáveis usadas na fórmula
-    char **variaveis = extrair_id(tess, size[1], &indice);
+    char **variaveis = extrair_id(aux, size[1], &indice);
+
+    free(aux);
+
     int *ids = (int*) malloc((indice) * sizeof(int));
     int quantity = 0;
     
@@ -269,16 +279,19 @@ bool recalcular_valor_formula(Vertice ** planilha, Vertice * atual, int size[]) 
 
     // Constrói a fórmula com os valores dos adjacentes
     int j;
-    char junto[20];
-    
-    for (int i = 0, j = 0; i < indice; i++) {
-        if (contemAlpha(variaveis[i])) {
-            double valor = get_from_id(planilha, size, ids[j])->number;
-            sprintf(variaveis[i], "%f", valor);
+    char *junto = (char *)malloc(1 * sizeof(char));
+    junto[0] = '\0';
+
+    size_t total_length = 1;
+    for(int i =0,j =0;i<indice;i++){
+        if(contemAlpha(variaveis[i])){
+            double valor =get_from_id(planilha,size,ids[j])->number;
+            sprintf(variaveis[i], "%lf", valor);
             j++;
         }
-        if (i == 0) strcpy(junto, variaveis[i]);
-        else strcat(junto, variaveis[i]);
+        total_length += strlen(variaveis[i]) + 1; 
+        junto = (char *) realloc(junto,total_length * sizeof(char));
+        strcat(junto, variaveis[i]);
         strcat(junto, " ");
     }
 
@@ -288,6 +301,7 @@ bool recalcular_valor_formula(Vertice ** planilha, Vertice * atual, int size[]) 
 
     // Libera memória alocada
     free(ids);
+    free(junto);
     for (int i = 0; i < indice; i++) {
         free(variaveis[i]);
     }
@@ -297,7 +311,7 @@ bool recalcular_valor_formula(Vertice ** planilha, Vertice * atual, int size[]) 
 }
 
 
-bool mudar_valor(Vertice** planilha,Vertice * atual,int size[],int valor){
+bool mudar_valor(Vertice** planilha,Vertice * atual,int size[],int valor,int tipo){
     atual->number = valor;
     if (atual->formula) {
         free(atual->formula);  // Libera a memória alocada para a fórmula
