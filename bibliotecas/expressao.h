@@ -5,6 +5,7 @@
 
 int id_para_linha(int id, int colunas) ;
 int id_para_coluna(int id, int colunas) ;
+Vertice * get_from_id(Vertice** planilha,int size[],int id);
 char * toA1(int size[],int id);
 int prec(char c);
 char associativity(char c) ;

@@ -5,19 +5,6 @@
 #include <string.h>
 #include <ctype.h>
 
-Vertice * get_from_id(Vertice** planilha,int size[],int id){
-    int lin = size[0];
-    int col = size[1];
-    for(int i =0;i<lin;i++){
-        for(int j=0;j<col;j++){
-            if(planilha[i][j].id == id) return &planilha[i][j]; 
-        }
-    }
-    char* not = toA1(size,id);
-    printf("célula %s não encontrada\n",not);
-    return NULL;
-}
-
 void set_number(Vertice * celula,double number){
     celula->number = number;
 }

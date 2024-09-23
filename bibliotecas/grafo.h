@@ -13,7 +13,6 @@ typedef struct vertice{
 }Vertice;
 
 
-Vertice * get_from_id(Vertice** planilha,int size[],int id);
 bool is_Cyclic_Util(Vertice *v, bool visitado[], bool recStack[]) ;
 bool is_Cyclic(Vertice **matrix, int size[]) ;
 bool adicionar_Adjacentes(Vertice ** planilha,Vertice* atual,Vertice* destino,int size[]);

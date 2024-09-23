@@ -137,7 +137,7 @@ int main() {
     }
 
     while (!encerrado) {
-        //limparterminal();
+        limparterminal();
         exibirMenu();
         print_celulas(planilha,size);
         printf("Escolha uma opção: ");
@@ -146,7 +146,7 @@ int main() {
         switch (opcao1) {
             case 1:
                 //VALORES
-                //limparterminal();
+                limparterminal();
                 exibirSubMenuValores();
                 print_celulas(planilha,size);
                 printf("Escolha uma opção: ");
@@ -159,7 +159,7 @@ int main() {
 
             case 2:
                 // FORMULA
-                //limparterminal();
+                limparterminal();
                 exibirSubMenuFormulas();
                 print_celulas(planilha,size);
                 printf("Escolha uma opção: ");
@@ -172,7 +172,7 @@ int main() {
 
             case 3:
                 // TEXTO
-                //limparterminal();
+                limparterminal();
                 exibirSubMenuTextos();
                 print_celulas(planilha,size);
                 printf("Escolha uma opção: ");
@@ -180,7 +180,7 @@ int main() {
                 if (opcao2 == 1) adicionar_texto_1_celula(planilha,size,(opcao2-1));
                 else if (opcao2 == 2) adicionar_texto_varias_celulas(planilha,size,(opcao2-1));
                 else if (opcao2 == 3){
-                    //limparterminal();
+                    limparterminal();
                     exibirSubSubstituir();
                     print_celulas(planilha,size);
                     printf("Escolha uma opção: ");
@@ -191,7 +191,7 @@ int main() {
                 break;
 
             case 4:
-                //limparterminal();
+                limparterminal();
                 exibirSubMenuTextos();
                 print_formulas(planilha,size);
                 printf("Digite qualquer numero para voltar ao menu: ");
