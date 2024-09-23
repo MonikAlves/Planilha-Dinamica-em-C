@@ -131,7 +131,7 @@ bool adicionar_Adjacentes(Vertice ** planilha,Vertice* atual,Vertice* destino,in
 void print_celulas(Vertice ** celulas,int size[]){
     int lin = size[0];
     int col = size[1];
-int maxLength[col];
+    int maxLength[col];
     memset(maxLength, 0, sizeof(maxLength)); // Inicializa com 0
 
     // Primeiro, calcular os tamanhos máximos
@@ -201,6 +201,92 @@ int maxLength[col];
             } else {
                 snprintf(buffer, sizeof(buffer), "%.2f", celulas[i][j].number); // Número formatado
                 content = buffer;
+            }
+
+            int len = strlen(content);
+            int padding = (maxLength[j] - len) / 2; // Centraliza com base no comprimento máximo
+            printf("[%*s %s%*s]", padding + 2, "", content, maxLength[j] - padding - len + 2, ""); // +2 para o espaço adicional
+        }
+        printf("\n");
+    }
+}
+
+void print_formulas(Vertice ** celulas,int size[]){
+    int lin = size[0];
+    int col = size[1];
+    int maxLength[col];
+    memset(maxLength, 0, sizeof(maxLength)); // Inicializa com 0
+
+    // Primeiro, calcular os tamanhos máximos
+    for (int j = 0; j < col; j++) {
+        for (int i = 0; i < lin; i++) {
+            int len;
+            if (celulas[i][j].isText) {
+                len = strlen(celulas[i][j].formula);
+            } else {
+                //printf("Tamanho da string: %d\n", strlen(celulas[i][j].formula));
+                char buffer[30];
+                snprintf(buffer, sizeof(buffer), "%s", celulas[i][j].formula);
+                len = strlen(buffer);
+            }
+            if (len > maxLength[j]) {
+                maxLength[j] = len; // Atualiza o comprimento máximo
+            }
+        }
+    }
+
+    // Imprimir cabeçalho
+    printf("[%*s%c%*s] | ", 1, "", ' ', 1, "");
+    for (int i = 0; i < col; i++) {
+        char columnName[10];
+        int temp = i + 1;
+        int index = 0;
+
+        while (temp > 0) {
+            temp -= 1;
+            columnName[index++] = 'A' + ((temp) % 26);
+            temp /= 26;
+        }
+
+        // Reverter a string de letras
+        for (int j = 0; j < index / 2; j++) {
+            char tempChar = columnName[j];
+            columnName[j] = columnName[index - j - 1];
+            columnName[index - j - 1] = tempChar;
+        }
+        columnName[index] = '\0';
+
+        int padding = (maxLength[i] - strlen(columnName)) / 2; // Calcular o espaçamento
+        printf("[%*s %s%*s]", padding + 2, "", columnName, maxLength[i] - padding - strlen(columnName) + 2, ""); // +2 para o espaço adicional
+    }
+    printf("\n");
+
+    // Imprimir linha de separação
+    printf(" ————");
+    for (int j = 0; j <= col; j++) {
+        printf("———");  // Adiciona linha de separação
+        if (j < col) {
+            int totalPadding = maxLength[j] + 4; // Total de padding para cada coluna
+            for (int p = 0; p < totalPadding; p++) {
+                printf("—");
+            }
+        }
+    }
+    printf("\n");
+
+    // Imprimir as células
+    for (int i = 0; i < lin; i++) {
+        printf("[%*s%d%*s] | ", 1, "", i + 1, 1, "");
+        for (int j = 0; j < col; j++) {
+            char buffer[20];
+            char *content;
+            if (celulas[i][j].isText) {
+                content = celulas[i][j].formula; // Texto
+            } else if (celulas[i][j].formula) {
+                snprintf(buffer, sizeof(buffer), "%s", celulas[i][j].formula); // Número formatado
+                content = buffer;
+            }else{
+                content = "";
             }
 
             int len = strlen(content);

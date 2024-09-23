@@ -11,6 +11,14 @@
 
 // freq/75 * nota/6 (trabalhando com inteiros)
 
+void limparterminal(){
+	#ifdef _WIN32
+        system("cls");  // Comando para Windows
+    #else
+        system("clear");  // Comando para Linux e macOS
+    #endif
+}
+
 char ** varias_celulas(char * intervalo,int size[],int *tamanho,int tipo){
         int col = size[1];
         char *token = strtok(intervalo, ":"); 
@@ -69,7 +77,7 @@ char ** scan_celulas(int tipo,int * tamanho,int size[]){
         *tamanho = 1;
         char * aux = (char*) malloc(10000* sizeof(char));
 
-        printf("Digite a celula que deseja mudar: ");
+        printf("\nDigite a celula que deseja mudar: ");
         scanf("%[^\n]%*c",aux);
         
         char ** A1 = (char **) malloc((*tamanho) * sizeof(char*));
@@ -84,7 +92,7 @@ char ** scan_celulas(int tipo,int * tamanho,int size[]){
     if(tipo == 1 || tipo == 2){
         char *intervalo = (char *) malloc(10000 * sizeof(char)); // Aloca espaço para o intervalo
 
-        printf("Digite o intervalo de células (ex: A1:A5): ");
+        printf("\nDigite o intervalo de células (ex: A1:A5): ");
         scanf("%[^\n]%*c", intervalo); // Lê o intervalo
 
         char ** A1 = varias_celulas(intervalo,size,tamanho,tipo);
@@ -98,7 +106,7 @@ char ** scan_celulas(int tipo,int * tamanho,int size[]){
 
         char *intervalo = (char *) malloc(10000 * sizeof(char)); // Aloca espaço para o intervalo
 
-        printf("Digite o intervalo a ser mudado os valores (ex: A1:A5): ");
+        printf("\nDigite o intervalo a ser mudado os valores (ex: A1:A5): ");
         scanf("%[^\n]%*c", intervalo); // Lê o intervalo
 
         char ** A1 = varias_celulas(intervalo,size,tamanho,tipo);
@@ -116,21 +124,29 @@ bool numero(Vertice ** planilha,int size[], int tipo){
     double * number;
     bool erro;
     int tamanho;
-
     char ** A1 = scan_celulas(tipo,&tamanho,size);
      if (A1 == NULL) {
             printf("Erro ao realizar operação: \n");
             return false;
-        }
-    if(tipo) printf("Digite o numero para elas: \n");
-    else printf("Digite o numero para ela: \n");
+    }
 
-        
-    number = (double*) malloc(tamanho * sizeof(double));
-    for(int i = 0; i<tamanho;i++){
-        printf("Digite o valor para %s: ",A1[i]);
-        scanf("%lf%*c",&number[i]);
-    } 
+    if(tipo) printf("\nDigite o numero para elas: \n");
+    else printf("\nDigite o numero para ela: \n");
+
+    if(tipo != 1){
+        number = (double*) malloc(tamanho * sizeof(double));
+        for(int i = 0; i<tamanho;i++){
+            printf("\nDigite o valor para %s: ",A1[i]);
+            scanf("%lf%*c",&number[i]);
+        } 
+    }else{
+        number = (double*) malloc(tamanho * sizeof(double));
+        printf("\nDigite o valor para %s ate %s: ",A1[0],A1[tamanho-1]);
+        scanf("%lf%*c",&number[0]);
+        for(int i = 1; i<tamanho;i++){
+            number[i] = number[0];
+        } 
+    }    
 
     for(int i = 0;i<tamanho;i++){
         Vertice * atual = get_from_id(planilha,size,from_A1_to_Id(A1[i],size[1],0));
@@ -162,8 +178,8 @@ bool texto(Vertice ** planilha,int size[], int tipo){
             printf("Erro ao realizar operação: \n");
             return false;
         }
-    if(tipo) printf("Digite o texto para elas: ");
-    else printf("Digite a texto para ela: ");
+    if(tipo) printf("\nDigite o texto para elas: ");
+    else printf("\nDigite a texto para ela: ");
 
     char * aux = (char*) malloc(10000* sizeof(char));
     
@@ -208,8 +224,8 @@ bool formula(Vertice ** planilha,int size[], int tipo){
             printf("Erro ao realizar operação: \n");
             return false;
     }
-    if(tipo) printf("Digite a formula para elas: ");
-    else printf("Digite a formula para ela: ");
+    if(tipo) printf("\nDigite a formula para elas: ");
+    else printf("\nDigite a formula para ela: ");
 
     char * aux = (char*) malloc(10000* sizeof(char));
     
@@ -235,92 +251,92 @@ bool formula(Vertice ** planilha,int size[], int tipo){
     return true;
 }
 
-int main(){
-    Vertice ** celulas;
-    int size[2];
-    int id =0;
-    char aux[10];
-    int auxnum;
-    char auxform[15];
-    bool erro;
+// int main(){
+//     Vertice ** celulas;
+//     int size[2];
+//     int id =0;
+//     char aux[10];
+//     int auxnum;
+//     char auxform[15];
+//     bool erro;
 
-    scanf("%d %d%*c",&size[0],&size[1]);
+//     scanf("%d %d%*c",&size[0],&size[1]);
 
-    celulas = (Vertice**) malloc(size[0]*sizeof(Vertice*));
-    for(int i =0;i<size[0];i++){
-        celulas[i] = (Vertice*) malloc(size[1]*sizeof(Vertice));
-    }
+//     celulas = (Vertice**) malloc(size[0]*sizeof(Vertice*));
+//     for(int i =0;i<size[0];i++){
+//         celulas[i] = (Vertice*) malloc(size[1]*sizeof(Vertice));
+//     }
 
-    for(int i =0;i<size[0];i++){
-        for(int j=0;j<size[1];j++){
-            celulas[i][j].id =  coordenada_para_id(i,j,size[1]);
-            celulas[i][j].adj = NULL;
-            celulas[i][j].numeroAdj = 0; 
-            celulas[i][j].isText = false;
-            celulas[i][j].formula = NULL;
-        }
-    }
+//     for(int i =0;i<size[0];i++){
+//         for(int j=0;j<size[1];j++){
+//             celulas[i][j].id =  coordenada_para_id(i,j,size[1]);
+//             celulas[i][j].adj = NULL;
+//             celulas[i][j].numeroAdj = 0; 
+//             celulas[i][j].isText = false;
+//             celulas[i][j].formula = NULL;
+//         }
+//     }
 
     
-    numero(celulas,size,3);
+//     numero(celulas,size,3);
 
-    print_celulas(celulas,size);
+//     print_celulas(celulas,size);
 
-    formula(celulas,size,2);
+//     formula(celulas,size,2);
 
-    print_celulas(celulas,size);
+//     print_celulas(celulas,size);
 
 
-    // erro = mudar_valor(celulas,get_from_id(celulas,size,from_A1_to_Id(aux,size[1])),size,auxnum);
+//     // erro = mudar_valor(celulas,get_from_id(celulas,size,from_A1_to_Id(aux,size[1])),size,auxnum);
     
-    // if(!erro) printf("Não foi possivel adicionar essa formula, verifique ela");
+//     // if(!erro) printf("Não foi possivel adicionar essa formula, verifique ela");
     
-    // print_celulas(celulas,size);
+//     // print_celulas(celulas,size);
 
-    // printf("Digite a celula que quer mudar: ");
-    // scanf("%[^\n]%*c",aux);
-    // printf("e a formula dela: ");
-    // scanf("%[^\n]%*c",auxform);
+//     // printf("Digite a celula que quer mudar: ");
+//     // scanf("%[^\n]%*c",aux);
+//     // printf("e a formula dela: ");
+//     // scanf("%[^\n]%*c",auxform);
 
 
-    // erro = add_formula(celulas,from_A1_to_Id(aux,size[1]),auxform,size);
-    // if(!erro) printf("Não foi possivel adicionar essa formula, verifique ela");
+//     // erro = add_formula(celulas,from_A1_to_Id(aux,size[1]),auxform,size);
+//     // if(!erro) printf("Não foi possivel adicionar essa formula, verifique ela");
 
-    // print_celulas(celulas,size);
+//     // print_celulas(celulas,size);
 
-    // // printf("Digite a celula que quer mudar: ");
-    // // scanf("%[^\n]%*c",aux);
-    // // printf("e o texto dela: ");
-    // // scanf("%[^\n]%*c",auxform);
-    // // get_from_id(celulas,size,from_A1_to_Id(aux,size[1]))->formula = auxform;
-    // // get_from_id(celulas,size,from_A1_to_Id(aux,size[1]))->isText = true;
+//     // // printf("Digite a celula que quer mudar: ");
+//     // // scanf("%[^\n]%*c",aux);
+//     // // printf("e o texto dela: ");
+//     // // scanf("%[^\n]%*c",auxform);
+//     // // get_from_id(celulas,size,from_A1_to_Id(aux,size[1]))->formula = auxform;
+//     // // get_from_id(celulas,size,from_A1_to_Id(aux,size[1]))->isText = true;
     
 
-    // // print_celulas(celulas,size);
+//     // // print_celulas(celulas,size);
 
 
-    // printf("Digite a celula que quer mudar: ");
-    // scanf("%[^\n]%*c",aux);
-    // printf("e o numero dela: ");
-    // scanf("%d%*c",&auxnum );
+//     // printf("Digite a celula que quer mudar: ");
+//     // scanf("%[^\n]%*c",aux);
+//     // printf("e o numero dela: ");
+//     // scanf("%d%*c",&auxnum );
 
-    // Vertice *celula_atual = get_from_id(celulas, size, from_A1_to_Id(aux, size[1]));
-    // if (celula_atual == NULL) {
-    //     printf("Erro: Célula não encontrada\n");
-    //     return -1;
-    // }
+//     // Vertice *celula_atual = get_from_id(celulas, size, from_A1_to_Id(aux, size[1]));
+//     // if (celula_atual == NULL) {
+//     //     printf("Erro: Célula não encontrada\n");
+//     //     return -1;
+//     // }
 
 
-    // erro = mudar_valor(celulas,celula_atual,size,auxnum);
-    // if(!erro) printf("Não foi possivel adicionar essa formula, verifique ela");
+//     // erro = mudar_valor(celulas,celula_atual,size,auxnum);
+//     // if(!erro) printf("Não foi possivel adicionar essa formula, verifique ela");
 
-    //    print_celulas(celulas,size);
+//     //    print_celulas(celulas,size);
     
-    // Liberação de memória (recomendado para evitar vazamento de memória)
-    for (int i = 0; i < size[0]; i++) {
-        free(celulas[i]);
-    }
-    free(celulas);
+//     // Liberação de memória (recomendado para evitar vazamento de memória)
+//     for (int i = 0; i < size[0]; i++) {
+//         free(celulas[i]);
+//     }
+//     free(celulas);
 
-    return 0;
-}
+//     return 0;
+// }
