@@ -30,7 +30,7 @@ Quando um valor é alterado:
 ## Limitações
 
 - Textos não acionam a reavaliação de fórmulas quando são alterados. Se um texto é modificado por um valor, as fórmulas relacionadas a essa célula não são afetadas.
-- Somente valores numéricos podem ser utilizados em cálculos.
+- Não é aceito operções de comparção como `1>2`, comparação apenas na secção de texto e nesse é apenas uma comparação por vez não podendo fazer duas comparações.
 
 ## Instruções para Uso
 
