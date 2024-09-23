@@ -220,17 +220,11 @@ void print_formulas(Vertice ** celulas,int size[]){
     // Primeiro, calcular os tamanhos máximos
     for (int j = 0; j < col; j++) {
         for (int i = 0; i < lin; i++) {
-            int len;
-            if (celulas[i][j].isText) {
-                len = strlen(celulas[i][j].formula);
-            } else {
-                //printf("Tamanho da string: %d\n", strlen(celulas[i][j].formula));
-                char buffer[30];
-                snprintf(buffer, sizeof(buffer), "%s", celulas[i][j].formula);
-                len = strlen(buffer);
-            }
-            if (len > maxLength[j]) {
-                maxLength[j] = len; // Atualiza o comprimento máximo
+            if (celulas[i][j].formula) {
+                int len = strlen(celulas[i][j].formula);
+                if (len > maxLength[j]) {
+                    maxLength[j] = len; // Atualiza o comprimento máximo da coluna
+                }
             }
         }
     }
@@ -256,8 +250,8 @@ void print_formulas(Vertice ** celulas,int size[]){
         }
         columnName[index] = '\0';
 
-        int padding = (maxLength[i] - strlen(columnName)) / 2; // Calcular o espaçamento
-        printf("[%*s %s%*s]", padding + 2, "", columnName, maxLength[i] - padding - strlen(columnName) + 2, ""); // +2 para o espaço adicional
+        int padding = (maxLength[i] - strlen(columnName)) / 2; // Calcular o espaçamento para cada coluna
+        printf("[%*s%s%*s]", padding + 2, "", columnName, maxLength[i] - padding - strlen(columnName) + 2, ""); // +2 para o espaço adicional
     }
     printf("\n");
 
@@ -278,20 +272,16 @@ void print_formulas(Vertice ** celulas,int size[]){
     for (int i = 0; i < lin; i++) {
         printf("[%*s%d%*s] | ", 1, "", i + 1, 1, "");
         for (int j = 0; j < col; j++) {
-            char buffer[20];
             char *content;
-            if (celulas[i][j].isText) {
-                content = celulas[i][j].formula; // Texto
-            } else if (celulas[i][j].formula) {
-                snprintf(buffer, sizeof(buffer), "%s", celulas[i][j].formula); // Número formatado
-                content = buffer;
-            }else{
+            if (celulas[i][j].formula) {
+                content = celulas[i][j].formula;
+            } else {
                 content = "";
             }
 
             int len = strlen(content);
-            int padding = (maxLength[j] - len) / 2; // Centraliza com base no comprimento máximo
-            printf("[%*s %s%*s]", padding + 2, "", content, maxLength[j] - padding - len + 2, ""); // +2 para o espaço adicional
+            int padding = (maxLength[j] - len) / 2; // Centraliza com base no comprimento máximo da coluna
+            printf("[%*s%s%*s]", padding + 2, "", content, maxLength[j] - padding - len + 2, ""); // +2 para o espaço adicional
         }
         printf("\n");
     }
