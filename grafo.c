@@ -128,13 +128,16 @@ bool adicionar_Adjacentes(Vertice ** planilha,Vertice* atual,Vertice* destino,in
     return true;
 }
 
-void print_celulas(Vertice ** celulas,int size[]){
+void print_celulas(Vertice **celulas, int size[]) {
     int lin = size[0];
     int col = size[1];
     int maxLength[col];
     memset(maxLength, 0, sizeof(maxLength)); // Inicializa com 0
 
-    // Primeiro, calcular os tamanhos máximos
+    // Definir o comprimento fixo para os números de linha
+    int fixedLineLength = 6; // Para criar espaços de cada lado, totalizando 6 caracteres
+
+    // Primeiro, calcular os tamanhos máximos das colunas de células
     for (int j = 0; j < col; j++) {
         for (int i = 0; i < lin; i++) {
             int len;
@@ -146,13 +149,13 @@ void print_celulas(Vertice ** celulas,int size[]){
                 len = strlen(buffer);
             }
             if (len > maxLength[j]) {
-                maxLength[j] = len; // Atualiza o comprimento máximo
+                maxLength[j] = len; // Atualiza o comprimento máximo da coluna
             }
         }
     }
 
     // Imprimir cabeçalho
-    printf("[%*s%c%*s] | ", 1, "", ' ', 1, "");
+    printf("[%*s%c%*s] | ", fixedLineLength / 2, "", ' ', fixedLineLength / 2, "");  // Ajusta a largura da coluna de números
     for (int i = 0; i < col; i++) {
         char columnName[10];
         int temp = i + 1;
@@ -192,7 +195,13 @@ void print_celulas(Vertice ** celulas,int size[]){
 
     // Imprimir as células
     for (int i = 0; i < lin; i++) {
-        printf("[%*s%d%*s] | ", 1, "", i + 1, 1, "");
+        // Imprime o número da linha centralizado com comprimento fixo
+        char buffer[20];
+        snprintf(buffer, sizeof(buffer), "%d", i + 1);
+        int len = strlen(buffer);
+        int padding = (fixedLineLength - len) / 2; // Centraliza o número da linha com base no comprimento fixo
+        printf("[%*s%s%*s] | ", padding, "", buffer, fixedLineLength - padding - len, "");
+
         for (int j = 0; j < col; j++) {
             char buffer[20];
             char *content;
@@ -210,6 +219,7 @@ void print_celulas(Vertice ** celulas,int size[]){
         printf("\n");
     }
 }
+
 
 void print_formulas(Vertice ** celulas,int size[]){
     int lin = size[0];
@@ -286,49 +296,3 @@ void print_formulas(Vertice ** celulas,int size[]){
         printf("\n");
     }
 }
-
-
-// int main(){
-//     Vertice ** celulas;
-//     int col,lin;
-//     int id =0;
-
-//     scanf("%d %d%*c",&lin,&col);
-
-//     celulas = (Vertice**) malloc(lin*sizeof(Vertice*));
-//     for(int i =0;i<lin;i++){
-//         celulas[i] = (Vertice*) malloc(col*sizeof(Vertice));
-//     }
-
-//     for(int i =0;i<lin;i++){
-//         for(int j=0;j<col;j++){
-//             celulas[i][j].id =  coordenada_para_id(i,j,col);
-//             celulas[i][j].adj = NULL;
-//             celulas[i][j].numeroAdj = 0; 
-//         }
-//     }
-
-    
-//     adicionarAdjacentes(celulas,get_from_id(celulas,lin,col,1),get_from_id(celulas,lin,col,5),lin,col);
-//     adicionarAdjacentes(celulas,get_from_id(celulas,lin,col,0),get_from_id(celulas,lin,col,3),lin,col);
-//     adicionarAdjacentes(celulas,get_from_id(celulas,lin,col,2),get_from_id(celulas,lin,col,5),lin,col);
-//     adicionarAdjacentes(celulas,get_from_id(celulas,lin,col,5),get_from_id(celulas,lin,col,2),lin,col);
-
-//     print_alfabeto(col);
-    
-//     for(int i =0;i<lin;i++){
-//         printf("[%*s%d%*s]", 1, "", i+1, 1, "");
-//         for(int j=0;j<col;j++){
-//             printf("[%*s%.2f%*s]", 2, "", celulas[i][j].id, 2, "");
-//         }
-//         printf("\n");
-//     }
-
-//     // Liberação de memória (recomendado para evitar vazamento de memória)
-//     for (int i = 0; i < lin; i++) {
-//         free(celulas[i]);
-//     }
-//     free(celulas);
-
-//     return 0;
-// }

@@ -218,7 +218,7 @@ bool add_formula(Vertice ** planilha, int id_Atual,char * expressao,int size[],i
 
     Vertice * atual = get_from_id(planilha,size,id_Atual);
     atual->formula = (char*) malloc((strlen(expressao) + 1)* sizeof(char));  // Aloca espaço para a fórmula
-    strcpy(atual->formula, expressao);  // Copia o conteúdo de 'expressao' para 'formula'
+    strcpy(atual->formula, expressao);  
 
     for(int i = 0;i<quantity;i++){
         Vertice * adjacente = get_from_id(planilha,size,ids[i]);        
@@ -243,7 +243,6 @@ bool add_formula(Vertice ** planilha, int id_Atual,char * expressao,int size[],i
         strcat(junto, variaveis[i]);
         strcat(junto, " ");
     }
-
     double resultado = calculadora(junto);// Adicione esta linha para debug
 
     atual->number = resultado;
@@ -257,6 +256,8 @@ bool add_formula(Vertice ** planilha, int id_Atual,char * expressao,int size[],i
         free(variaveis[i]);
     }
     free(variaveis);
+
+    atual->isText = false;
 
     return true;
 
@@ -347,33 +348,3 @@ bool mudar_valor(Vertice** planilha,Vertice * atual,int size[],int valor){
     return true;
 
 }
-
-
-// int main(){
-//     char * aux = (char*) malloc(10000* sizeof(char));
-
-//     printf("Digite a expressão: ");
-//     scanf("%[^\n]%*c",aux);
-    
-//     char * expressão = (char *) malloc(strlen(aux) * sizeof(char));
-
-//     strcpy(expressão,aux);
-
-//     char result[1000]; // Para armazenar a expressão pós-fixada
-
-//     // Converte a expressão infixa para pós-fixada
-//     infixToPostfix(aux, result);
-
-//     printf("Expressão pós-fixada: %s\n", result);
-
-//     // Extrai os IDs (variáveis/operandos) da expressão pós-fixada
-//     extrair_id(result, 9);
-
-//     free(aux);
-//     free(expressão);
-
-
-//     return 0;
-// }
-
-// //a1+b1*(c1^d1-e1)^(f1+g1*h1)-i1

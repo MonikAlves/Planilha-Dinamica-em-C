@@ -71,10 +71,10 @@ void operação(No ** new, char operação){
 }
 
 double getresultado(No* no){
-    if (no == NULL) {
-        return 0; // Ou algum valor de erro
+    No* aux = no;
+    while(aux != NULL){
+        return aux->numero;
     }
-    return no->numero;
 }
 
 double calculadora(char* expressão){
@@ -88,10 +88,15 @@ double calculadora(char* expressão){
         int sumDecimal = 0;
         int isNegative = 0; 
 
-        if (expressão[i] == '-') {
-            isNegative = 1; 
+         if (i == 0 && expressão[i] == '-') {
+            isNegative = 1;
             i++;
-        }
+        } else if (expressão[i] == '-') {
+            if (i > 0 && expressão[i - 1] == ' ' && expressão[i+1] != ' ') {
+                isNegative = 1;
+                i++;
+            }
+        } 
 
         while(aux){
             if(expressão[i] == ' ' || expressão[i] == '\0'){
