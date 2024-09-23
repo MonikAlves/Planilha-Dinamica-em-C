@@ -106,8 +106,9 @@ char ** scan_celulas(int tipo,int * tamanho,int size[]){
 
         char *intervalo = (char *) malloc(10000 * sizeof(char)); // Aloca espaço para o intervalo
 
-        printf("\nDigite o intervalo a ser mudado os valores (ex: A1:A5): ");
-        scanf("%[^\n]%*c", intervalo); // Lê o intervalo
+        printf("\nDigite as células que serão comparadas (ex: A1:A5): ");
+        scanf("%[^\n]%*c", intervalo); 
+        // Lê o intervalo
 
         char ** A1 = varias_celulas(intervalo,size,tamanho,tipo);
 
@@ -170,49 +171,120 @@ bool numero(Vertice ** planilha,int size[], int tipo){
 
 }
 
-bool texto(Vertice ** planilha,int size[], int tipo){
+bool texto(Vertice ** planilha,int size[], int tipo,char comparacao){
     int tamanho;
 
     char ** A1 = scan_celulas(tipo,&tamanho,size);
      if (A1 == NULL) {
             printf("Erro ao realizar operação: \n");
             return false;
-        }
-    if(tipo) printf("\nDigite o texto para elas: ");
-    else printf("\nDigite a texto para ela: ");
-
-    char * aux = (char*) malloc(10000* sizeof(char));
+    }
+    if(tipo == 3){
+        double numero;
+        printf("\nDigite o numero a ser comparado: ");
+        scanf("%lf%*c", &numero);
+        printf("\nDigite o texto para por quando verdadeiro: ");
+        char * aux = (char*) malloc(10000* sizeof(char));
     
-    scanf("%[^\n]%*c",aux);
-        
-    char * texto = (char *) malloc((strlen(aux)+1) * sizeof(char));
+        scanf("%[^\n]%*c",aux);
+            
+        char * verdadeiro = (char *) malloc((strlen(aux)+1) * sizeof(char));
 
-    strcpy(texto,aux);
-    free(aux);
+        strcpy(verdadeiro,aux);
+        free(aux);
+        printf("\nDigite o texto para por quando falso: ");
+        aux = (char*) malloc(10000* sizeof(char));
+    
+        scanf("%[^\n]%*c",aux);
+            
+        char * falso = (char *) malloc((strlen(aux)+1) * sizeof(char));
 
-    for(int i = 0;i<tamanho;i++){
-        Vertice * atual = get_from_id(planilha,size,from_A1_to_Id(A1[i],size[1],0));
-         if (atual == NULL) {
-            printf("Célula não encontrada com id: %d\n",A1[i]);
-            free(A1); 
-            return false;
+        strcpy(falso,aux);
+        free(aux);
+
+        for(int i = 0;i<tamanho;i++){
+            Vertice * atual = get_from_id(planilha,size,from_A1_to_Id(A1[i],size[1],0));
+            if (atual == NULL) {
+                printf("Célula não encontrada com id: %d\n",A1[i]);
+                free(A1); 
+                return false;
+            }
+            if(comparacao == '='){
+                if(atual->number == numero){
+                    atual->formula = (char*) malloc((strlen(verdadeiro) + 1)* sizeof(char));  // Aloca espaço para a fórmula
+                    strcpy(atual->formula, verdadeiro);
+                } 
+                else{
+                    atual->formula = (char*) malloc((strlen(falso) + 1)* sizeof(char));
+                    strcpy(atual->formula, falso);
+                } 
+            }
+            if(comparacao == '<'){
+                    if(atual->number < numero){
+                    atual->formula = (char*) malloc((strlen(verdadeiro) + 1)* sizeof(char));  // Aloca espaço para a fórmula
+                    strcpy(atual->formula, verdadeiro);
+                } 
+                else{
+                    atual->formula = (char*) malloc((strlen(falso) + 1)* sizeof(char));
+                    strcpy(atual->formula, falso);
+                } 
+            }
+            if(comparacao == '>'){
+                    if(atual->number <= numero){
+                    atual->formula = (char*) malloc((strlen(verdadeiro) + 1)* sizeof(char));  // Aloca espaço para a fórmula
+                    strcpy(atual->formula, verdadeiro);
+                } 
+                else{
+                    atual->formula = (char*) malloc((strlen(falso) + 1)* sizeof(char));
+                    strcpy(atual->formula, falso);
+                } 
+            }
+
+            atual->isText = true;
+            
         }
 
-        atual->formula = (char*) malloc((strlen(texto) + 1)* sizeof(char));  // Aloca espaço para a fórmula
-        strcpy(atual->formula, texto);
-        atual->isText = true;
+        free(verdadeiro);
+        free(falso);
+
+    }else{
+
+        if(tipo == 1) printf("\nDigite o texto para elas: ");
+        else printf("\nDigite a texto para ela: ");
+
+        char * aux = (char*) malloc(10000* sizeof(char));
         
+        scanf("%[^\n]%*c",aux);
+            
+        char * texto = (char *) malloc((strlen(aux)+1) * sizeof(char));
+
+        strcpy(texto,aux);
+        free(aux);
+
+        for(int i = 0;i<tamanho;i++){
+            Vertice * atual = get_from_id(planilha,size,from_A1_to_Id(A1[i],size[1],0));
+            if (atual == NULL) {
+                printf("Célula não encontrada com id: %d\n",A1[i]);
+                free(A1); 
+                return false;
+            }
+
+            atual->formula = (char*) malloc((strlen(texto) + 1)* sizeof(char));  // Aloca espaço para a fórmula
+            strcpy(atual->formula, texto);
+            atual->isText = true;
+            
+        }
+
+        free(texto);
+
     }
 
-    free(texto);
-    for (int i = 0; i < tamanho; i++) {
-        free(A1[i]);
-    }
-    free(A1); 
 
-    return true;
-
-
+        for (int i = 0; i < tamanho; i++) {
+            free(A1[i]);
+        }
+        free(A1); 
+        return true;
 }
 
 bool formula(Vertice ** planilha,int size[], int tipo){

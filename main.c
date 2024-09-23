@@ -40,19 +40,23 @@ void adicionar_formula_dinamica_varias_celulas(Vertice ** planilha,int * size,in
 
 void adicionar_texto_1_celula(Vertice ** planilha,int * size,int tipo) {
     printf("Adicionando um texto a uma única célula...\n");
-    texto(planilha,size,tipo);
+    texto(planilha,size,tipo,' ');
     print_celulas(planilha,size);
 }
 
 void adicionar_texto_varias_celulas(Vertice ** planilha,int * size,int tipo) {
     printf("Adicionando um texto a várias células...\n");
-    texto(planilha,size,tipo);
+    texto(planilha,size,tipo,' ');
     print_celulas(planilha,size);
 }
 
 void adicionar_texto_no_lugar_de_valores(Vertice ** planilha,int * size,int tipo) {
+    char comparação;
+    if(tipo == 1) comparação = '=';
+    if(tipo == 2) comparação = '<';
+    if(tipo == 3) comparação = '>';
     printf("Substituindo valores específicos por texto...\n");
-    texto(planilha,size,tipo);
+    texto(planilha,size,3,comparação);
     print_celulas(planilha,size);
 }
 
@@ -62,8 +66,8 @@ void exibirMenu() {
     printf("====================================\n");
     printf("= 1 - Adicionar um Valor           =\n");
     printf("= 2 - Adicionar uma Fórmula        =\n");
-    printf("= 3 - Ver as Fórmulas              =\n");
-    printf("= 4 - Adicionar um Texto           =\n");
+    printf("= 3 - Adicionar um Texto           =\n");
+    printf("= 4 - Ver as Fórmulas              =\n");
     printf("= 5 - Encerrar                     =\n");
     printf("====================================\n");
 }
@@ -79,12 +83,12 @@ void exibirSubMenuValores() {
 }
 
 void exibirSubMenuFormulas() {
-    printf("=======================================================\n");
-    printf("=                   Adicionar Fórmula                 =\n");
-    printf("=======================================================\n");
-    printf("= 1 - Inserir uma fórmula a uma única célula          =\n");
-    printf("= 2 - Inserir uma fórmula a várias células            =\n");
-    printf("= 3 - Inserir uma fórmula dinâmica a várias células   =\n");
+    printf("=====================================================\n");
+    printf("=                 Adicionar Fórmula                 =\n");
+    printf("=====================================================\n");
+    printf("= 1 - Inserir uma fórmula a uma única célula        =\n");
+    printf("= 2 - Inserir uma fórmula a várias células          =\n");
+    printf("= 3 - Inserir uma fórmula dinâmica a várias células =\n");
     printf("=======================================================\n");
 }
 
@@ -98,8 +102,18 @@ void exibirSubMenuTextos() {
     printf("================================================\n");
 }
 
+void exibirSubSubstituir() {
+    printf("=========================================================\n");
+    printf("=                  Substituir por Texto                  =\n");
+    printf("==========================================================\n");
+    printf("= 1 - Substituir valores iguais (ex: A1 = 1)             =\n");
+    printf("= 2 - Substituir valores menores (ex: A1 < 1)            =\n");
+    printf("= 3 - Substituir valores menores ou igual (ex: A1 <= 1)  =\n");
+    printf("==========================================================\n");
+}
+
 int main() {
-    int opcao1, opcao2;
+    int opcao1, opcao2,opcao3;
     bool encerrado = false;
     Vertice ** planilha;
     int size[2];
@@ -131,18 +145,20 @@ int main() {
         
         switch (opcao1) {
             case 1:
+                //VALORES
                 limparterminal();
                 exibirSubMenuValores();
                 print_celulas(planilha,size);
                 printf("Escolha uma opção: ");
                 scanf("%d%*c", &opcao2);
                 if (opcao2 == 1)adicionar_valor_1_celula(planilha,size,0);
-                if (opcao2 == 2) adicionar_valor_1_celula(planilha,size,1);
+                else if (opcao2 == 2) adicionar_valor_1_celula(planilha,size,1);
                 else if (opcao2 == 3) adicionar_valor_varias_celulas(planilha,size,2);
                 else printf("Opção inválida! Tente novamente.\n");
                 break;
 
             case 2:
+                // FORMULA
                 limparterminal();
                 exibirSubMenuFormulas();
                 print_celulas(planilha,size);
@@ -153,16 +169,9 @@ int main() {
                 else if (opcao2 == 3) adicionar_formula_dinamica_varias_celulas(planilha,size,(opcao2-1));
                 else printf("Opção inválida! Tente novamente.\n");
                 break;
+
             case 3:
-                limparterminal();
-                exibirSubMenuTextos();
-                print_formulas(planilha,size);
-                printf("Digite qualquer numero para voltar ao menu: ");
-                scanf("%d%*c", &opcao2);
-                if (opcao2) break;
-                else break;
-                break;
-            case 4:
+                // TEXTO
                 limparterminal();
                 exibirSubMenuTextos();
                 print_celulas(planilha,size);
@@ -170,8 +179,25 @@ int main() {
                 scanf("%d%*c", &opcao2);
                 if (opcao2 == 1) adicionar_texto_1_celula(planilha,size,(opcao2-1));
                 else if (opcao2 == 2) adicionar_texto_varias_celulas(planilha,size,(opcao2-1));
-                else if (opcao2 == 3) adicionar_texto_no_lugar_de_valores(planilha,size,opcao2);
+                else if (opcao2 == 3){
+                    limparterminal();
+                    exibirSubSubstituir();
+                    print_celulas(planilha,size);
+                    printf("Escolha uma opção: ");
+                    scanf("%d%*c", &opcao3);
+                    adicionar_texto_no_lugar_de_valores(planilha,size,opcao3);
+                } 
                 else printf("Opção inválida! Tente novamente.\n");
+                break;
+
+            case 4:
+                limparterminal();
+                exibirSubMenuTextos();
+                print_formulas(planilha,size);
+                printf("Digite qualquer numero para voltar ao menu: ");
+                scanf("%d%*c", &opcao2);
+                if (opcao2) break;
+                else break;
                 break;
 
             case 5:

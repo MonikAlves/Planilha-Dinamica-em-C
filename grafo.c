@@ -142,7 +142,7 @@ void print_celulas(Vertice ** celulas,int size[]){
                 len = strlen(celulas[i][j].formula);
             } else {
                 char buffer[20];
-                snprintf(buffer, sizeof(buffer), "%.2f", celulas[i][j].number);
+                snprintf(buffer, sizeof(buffer), "%.2lf", celulas[i][j].number);
                 len = strlen(buffer);
             }
             if (len > maxLength[j]) {
@@ -199,7 +199,7 @@ void print_celulas(Vertice ** celulas,int size[]){
             if (celulas[i][j].isText) {
                 content = celulas[i][j].formula; // Texto
             } else {
-                snprintf(buffer, sizeof(buffer), "%.2f", celulas[i][j].number); // Número formatado
+                snprintf(buffer, sizeof(buffer), "%.2lf", celulas[i][j].number); // Número formatado
                 content = buffer;
             }
 

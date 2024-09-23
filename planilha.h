@@ -6,7 +6,7 @@
 
 void limparterminal();
 bool numero(Vertice ** planilha,int size[], int tipo);
-bool texto(Vertice ** planilha,int size[], int tipo);
+bool texto(Vertice ** planilha,int size[], int tipo,char comparacao);
 bool formula(Vertice ** planilha,int size[], int tipo);
 
 #endif
