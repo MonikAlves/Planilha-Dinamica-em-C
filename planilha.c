@@ -243,7 +243,7 @@ bool texto(Vertice ** planilha,int size[], int tipo,char comparacao){
     }else{
 
         if(tipo == 1) printf("\nDigite o texto para elas: ");
-        else printf("\nDigite a texto para ela: ");
+        else printf("\nDigite o texto para ela: ");
 
         char * aux = (char*) malloc(10000* sizeof(char));
         

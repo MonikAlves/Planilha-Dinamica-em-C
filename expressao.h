@@ -14,7 +14,7 @@ int coordenada_para_id(int x, int y, int colunas) ;
 int contemAlpha(char *str) ;
 int from_A1_to_Id(char *a1,int C,int tipo);
 int * extrair_id(char * expressão,int col,int *indice);
-bool mudar_valor(Vertice** planilha,Vertice * atual,int size[],int valor);
+bool mudar_valor(Vertice** planilha,Vertice * atual,int size[],double valor);
 bool recalcular_valor_formula(Vertice ** planilha, Vertice * atual, int size[]);
 
 #endif

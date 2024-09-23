@@ -246,6 +246,7 @@ bool add_formula(Vertice ** planilha, int id_Atual,char * expressao,int size[],i
     double resultado = calculadora(junto);// Adicione esta linha para debug
 
     atual->number = resultado;
+    printf("AAA %lf",atual->number);
     //printf("%s -> %.2f ",junto,resultado);
 
     free(junto);
@@ -324,7 +325,7 @@ bool recalcular_valor_formula(Vertice ** planilha, Vertice * atual, int size[]) 
 }
 
 
-bool mudar_valor(Vertice** planilha,Vertice * atual,int size[],int valor){
+bool mudar_valor(Vertice** planilha,Vertice * atual,int size[],double valor){
     atual->number = valor;
     if (atual->formula) {
         free(atual->formula);  // Libera a memória alocada para a fórmula
