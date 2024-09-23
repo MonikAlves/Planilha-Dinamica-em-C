@@ -245,6 +245,8 @@ bool add_formula(Vertice ** planilha, int id_Atual,char * expressao,int size[],i
     }
 
     double resultado = calculadora(junto);
+printf("Cálculo: %s = %.2f\n", junto, resultado); // Adicione esta linha para debug
+
     atual->number = resultado;
     //printf("%s -> %.2f ",junto,resultado);
 

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <ctype.h>
 
 const char soma = '+';
 const char subtração = '-';
@@ -70,10 +71,10 @@ void operação(No ** new, char operação){
 }
 
 double getresultado(No* no){
-    No* aux = no;
-    while(aux != NULL){
-        return aux->numero;
+    if (no == NULL) {
+        return 0; // Ou algum valor de erro
     }
+    return no->numero;
 }
 
 double calculadora(char* expressão){
@@ -85,16 +86,24 @@ double calculadora(char* expressão){
         double integer = 0;
         double number = 0;
         int sumDecimal = 0;
+        int isNegative = 0; 
+
+        if (expressão[i] == '-') {
+            isNegative = 1; 
+            i++;
+        }
 
         while(aux){
             if(expressão[i] == ' ' || expressão[i] == '\0'){
                 aux = 0;
                 number = integer + (decimal/expoente(decimal));
+                if (isNegative) {
+                    number = -number; 
+                }
                 empilhar(&new,number);
                 break;
             }
 
-            
             if(expressão[i] == '.'){
                 sumDecimal = 1;
                 i++;
