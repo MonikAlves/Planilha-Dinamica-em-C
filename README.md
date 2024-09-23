@@ -20,6 +20,9 @@ As fórmulas podem ser inseridas tanto em notação polonesa reversa (RPN) quant
 ### Exemplo de Planilha: `nota.txt`
 O arquivo `nota.txt` é fornecido como um exemplo prático. Ao colá-lo no terminal, ele mostra um protótipo de planilha contendo valores de notas de alunos. Esta planilha demonstra o uso das fórmulas e a manipulação de dados dentro do sistema, ajudando a entender como ele funciona.
 
+<img src="image/exemplo.png" alt="Texto Alternativo" width="600"/>
+
+
 ## Atualização de Valores
 
 Quando um valor é alterado:
