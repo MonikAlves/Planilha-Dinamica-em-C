@@ -94,7 +94,7 @@ void atualizar_formulas(Vertice **planilha, int size[]) {
         for (int j = 0; j < col; j++) {
             Vertice *atual = &planilha[i][j];
             if (!visitado[atual->id]) {
-                if(atual->formula) recalcular_formulas(planilha,atual, visitado,size);
+                if(atual->formula && atual->isText == false) recalcular_formulas(planilha,atual, visitado,size);
                 visitado[atual->id] = true; 
             }
         }
