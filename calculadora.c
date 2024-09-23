@@ -97,9 +97,7 @@ double calculadora(char* expressão){
             if(expressão[i] == ' ' || expressão[i] == '\0'){
                 aux = 0;
                 number = integer + (decimal/expoente(decimal));
-                if (isNegative) {
-                    number = -number; 
-                }
+                if (isNegative) number = -number; 
                 empilhar(&new,number);
                 break;
             }
