@@ -92,7 +92,7 @@ double calculadora(char* expressão){
             isNegative = 1;
             i++;
         } else if (expressão[i] == '-') {
-            if (i > 0 && expressão[i - 1] == ' ' && expressão[i+1] != ' ') {
+            if (i > 0 && expressão[i - 1] == ' ' && expressão[i+1] != ' ' && expressão[i+1] != '\0') {
                 isNegative = 1;
                 i++;
             }

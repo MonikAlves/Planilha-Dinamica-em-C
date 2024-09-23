@@ -142,7 +142,7 @@ void print_celulas(Vertice **celulas, int size[]) {
     }
 
     // Imprimir cabeçalho
-    printf("[%*s%c%*s] | ", fixedLineLength / 2, "", ' ', fixedLineLength / 2, "");  // Ajusta a largura da coluna de números
+    printf("[%*s%c%*s] | ", fixedLineLength / 2, "", ' ', (fixedLineLength / 2)-1, "");  // Ajusta a largura da coluna de números
     for (int i = 0; i < col; i++) {
         char columnName[10];
         int temp = i + 1;
