@@ -47,7 +47,7 @@ Quando um valor é alterado:
 Para compilar o programa, utilize o comando abaixo:
 
 ```bash
-gcc main.c bibliotecas/*.c -I"bibliotecas" -o Planilha
+gcc main.c bibliotecas/*.c -I"bibliotecas" -o Planilha -lm
 ```
 ## Como Executar
 Após a compilação, o arquivo executável será gerado com o nome Planilha. Para rodar o programa, execute o comando abaixo:
